@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>منظومة إدارة وتوزيع المساعدات بالمخيم</title>
+  <title>منظومة العدالة والشفافية لإدارة المخيم</title>
   <style>
     :root {
-      --bg: #f4f6f9;
+      --bg: #f1f5f9;
       --card: #ffffff;
       --primary: #1e3a8a;
       --primary-light: #2563eb;
@@ -14,8 +14,8 @@
       --accent: #d97706;
       --danger: #dc2626;
       --success: #16a34a;
-      --text: #1e293b;
-      --muted: #64748b;
+      --text: #0f172a;
+      --muted: #475569;
       --border: #cbd5e1;
       --alert-bg: #fef2f2;
       --alert-border: #f87171;
@@ -36,7 +36,7 @@
       background: linear-gradient(135deg, var(--primary), #0f172a);
       color: #fff;
       padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -54,21 +54,22 @@
     }
     .sync-bar {
       font-size: 0.78rem;
-      background: rgba(255,255,255,0.12);
-      padding: 4px 10px;
+      background: rgba(255,255,255,0.14);
+      padding: 5px 12px;
       border-radius: 20px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      font-weight: 600;
     }
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       display: inline-block;
     }
-    .dot.online { background: #4ade80; }
-    .dot.offline { background: #fbbf24; }
+    .dot.online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+    .dot.offline { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
     .nav-tabs {
       display: flex;
       gap: 6px;
@@ -93,7 +94,7 @@
       color: var(--primary);
     }
     .container {
-      max-width: 960px;
+      max-width: 980px;
       margin: 16px auto;
       padding: 0 12px;
     }
@@ -130,15 +131,23 @@
     .badge-warning { background: #fef3c7; color: #92400e; }
     .badge-danger { background: #fee2e2; color: #991b1b; }
     .badge-teal { background: #ccfbf1; color: #115e59; }
+    .badge-muted { background: #e2e8f0; color: #475569; }
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .form-group label {
       display: block;
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin-bottom: 5px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 3px;
       color: var(--text);
+    }
+    .helper-text {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      line-height: 1.45;
     }
     input[type="text"], input[type="number"], input[type="password"], select, textarea {
       width: 100%;
@@ -148,6 +157,11 @@
       font-size: 0.95rem;
       background: #fff;
       color: var(--text);
+    }
+    input:disabled, select:disabled {
+      background: #e2e8f0;
+      color: #64748b;
+      cursor: not-allowed;
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
@@ -182,7 +196,7 @@
     }
     .grid-3 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
     }
     .item-box {
@@ -196,9 +210,10 @@
       background: var(--alert-bg);
       border-color: var(--alert-border);
     }
-    .item-box.highlight-yellow {
-      background: #fffbeb;
-      border-color: #fcd34d;
+    .item-box.highlight-excluded {
+      background: #f1f5f9;
+      border-style: dashed;
+      opacity: 0.85;
     }
     .item-header {
       display: flex;
@@ -247,19 +262,21 @@
     }
     .checkbox-row {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 0.9rem;
     }
     .checkbox-row input {
       width: 18px;
       height: 18px;
+      margin-top: 3px;
+      flex-shrink: 0;
     }
     .score-preview {
       background: #0f172a;
       color: #fff;
-      padding: 12px;
+      padding: 12px 14px;
       border-radius: 10px;
       margin: 12px 0;
       display: flex;
@@ -270,7 +287,7 @@
     }
     .pin-display {
       font-family: monospace;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       letter-spacing: 2px;
       background: #e2e8f0;
       padding: 2px 8px;
@@ -286,16 +303,16 @@
   <div class="header-top">
     <div class="header-title">
       <h1>منظومة العدالة والشفافية لإدارة المخيم</h1>
-      <div class="muted-text" style="color:#cbd5e1; font-size:0.78rem;" id="lastSyncLabel">آخر تحديث محفوظ: جاري الفحص...</div>
+      <div class="muted-text" style="color:#cbd5e1; font-size:0.78rem;" id="lastSyncLabel">آخر تحديث للبيانات: جاري الفحص...</div>
     </div>
     <div class="sync-bar" id="connectionBadge">
       <span class="dot offline" id="connDot"></span>
-      <span id="connText">وضع محلي / أوفلاين</span>
+      <span id="connText">جاري الاتصال...</span>
     </div>
   </div>
   <nav class="nav-tabs">
     <button class="nav-tab active" onclick="switchPortal('public')" id="tab-public">لوحة الشفافية العامة</button>
-    <button class="nav-tab" onclick="switchPortal('family')" id="tab-family">بوابة الأسرة (بطاقة الخيمة)</button>
+    <button class="nav-tab" onclick="switchPortal('family')" id="tab-family">بوابة العائلة (بطاقة العائلة)</button>
     <button class="nav-tab" onclick="switchPortal('manager')" id="tab-manager">بوابة مسؤولي المخيم</button>
     <button class="nav-tab" onclick="switchPortal('supervisor')" id="tab-supervisor">بوابة المشرف</button>
   </nav>
@@ -311,18 +328,18 @@
 
     <div class="card">
       <div class="card-title">
-        <span>مؤشرات التوقف الحالية (أين يقف الدور في كل مسار؟)</span>
-        <span class="badge badge-primary" id="publicTotalFamiliesBadge">إجمالي الخيام: 0</span>
+        <span>مؤشرات الدور الحالية في المسارات التسعة</span>
+        <span class="badge badge-primary" id="publicTotalFamiliesBadge">إجمالي العائلات المسجلة: 0</span>
       </div>
       <div class="muted-text" style="margin-bottom:10px;">
-        الرتبة (أ) للمساعدات الرئيسية والأساسية، والرتبة (ب) للمساعدات التكميلية والطارئة. يبدأ التوزيع القادم من الخيمة التي تلي المؤشر مباشرة.
+        الرتبة (أ) للمساعدات الرئيسية والأساسية، والرتبة (ب) للمساعدات التكميلية والطارئة. تدخل في كل مسار العائلات المؤهلة له فقط، ويبدأ التوزيع القادم من العائلة الموضحة في المؤشر.
       </div>
       <div class="grid-3" id="publicMarkersList"></div>
     </div>
 
     <div class="card">
       <div class="card-title">
-        <span>إعلانات الشحنات والتوزيعات الأخيرة</span>
+        <span>إعلانات الشحنات والتوزيعات الأخيرة بالمخيم</span>
       </div>
       <div id="publicAnnouncementsList"></div>
     </div>
@@ -332,51 +349,57 @@
         <span>طابور الأولوية العام للمخيم (مرتب تنازلياً بالنقاط)</span>
       </div>
       <div class="muted-text" style="margin-bottom:10px;">
-        لمعرفة تفاصيل نقاط خيمتك وموقعك الدقيق، ادخل إلى «بوابة الأسرة» برقم خيمتك والكود السري الخاص بك.
+        لمعرفة تفصيل نقاط عائلتك وموقعك الدقيق في كل مسار، ادخل إلى «بوابة العائلة» برقم عائلتك والكود السري الخاص بك.
       </div>
       <div id="publicQueueList"></div>
     </div>
   </section>
 
-  <!-- ==================== 2. بوابة الأسرة ==================== -->
+  <!-- ==================== 2. بوابة العائلة ==================== -->
   <section id="portal-family" class="hidden">
     <div id="familyLoginCard" class="card">
-      <div class="card-title">دخول رب الأسرة (بطاقة الخيمة الرقمية)</div>
+      <div class="card-title">دخول رب الأسرة (بطاقة العائلة الرقمية)</div>
       <div class="form-group">
-        <label>رقم الخيمة</label>
-        <input type="number" id="famLoginTent" placeholder="أدخل رقم الخيمة...">
+        <label>رقم العائلة</label>
+        <span class="helper-text">أدخل الرقم التسلسلي المخصص لعائلتك في سجل المخيم.</span>
+        <input type="number" id="famLoginNum" placeholder="مثال: 5">
       </div>
       <div class="form-group">
-        <label>الكود السري للخيمة (4 أرقام)</label>
-        <input type="password" id="famLoginPin" maxlength="8" placeholder="أدخل الكود السري...">
+        <label>الكود السري للعائلة</label>
+        <span class="helper-text">أدخل الكود المكون من 4 أرقام الذي استلمته من لجنة المخيم (أو الكود الذي قمت بتعيينه).</span>
+        <input type="password" id="famLoginPin" maxlength="12" placeholder="الكود السري...">
       </div>
-      <button class="btn btn-primary btn-block" onclick="loginFamily()">عرض بطاقة الخيمة</button>
+      <button class="btn btn-primary btn-block" onclick="loginFamily()">عرض بطاقة العائلة</button>
     </div>
 
     <div id="familyDashboard" class="hidden">
       <div class="card">
         <div class="card-title">
-          <span id="famDashTitle">بطاقة الخيمة</span>
+          <span id="famDashTitle">بطاقة العائلة</span>
           <button class="btn btn-outline btn-sm" onclick="logoutFamily()">تسجيل خروج</button>
         </div>
         <div id="famSummaryBox"></div>
       </div>
 
       <div class="card">
-        <div class="card-title">موقع خيمتك في طابور المسارات الحالية</div>
+        <div class="card-title">موقع عائلتك في طوابير المسارات التسعة</div>
+        <div class="muted-text" style="margin-bottom:10px;">
+          يبين هذا القسم موقع عائلتك الحالي في كل مسار. المسارات التخصصية (كالرضع أو التعليم أو الصحة) تضم فقط العائلات المسجل لديها أفراد من تلك الفئة.
+        </div>
         <div class="grid-2" id="famQueueStatusBox"></div>
       </div>
 
       <div class="card">
-        <div class="card-title">سجل استلامات الخيمة السابقة</div>
+        <div class="card-title">سجل استلامات العائلة السابقة</div>
         <div id="famHistoryBox"></div>
       </div>
 
       <div class="card">
-        <div class="card-title">تغيير الكود السري للخيمة</div>
+        <div class="card-title">تغيير الكود السري للعائلة</div>
         <div class="form-group">
-          <label>الكود السري الجديد (4 أرقام أو أكثر)</label>
-          <input type="password" id="famNewPin" placeholder="أدخل الكود الجديد...">
+          <label>الكود السري الجديد</label>
+          <span class="helper-text">اختر كوداً سرياً جديداً (4 خانات أو أكثر) يسهل عليك تذكره لحماية خصوصية بطاقة عائلتك.</span>
+          <input type="password" id="famNewPin" placeholder="الكود الجديد...">
         </div>
         <button class="btn btn-secondary" onclick="changeFamilyPin()">حفظ الكود الجديد</button>
       </div>
@@ -389,11 +412,13 @@
       <div class="card-title">دخول مسؤولي إدارة المخيم</div>
       <div class="form-group">
         <label>اسم المستخدم (اليوزر)</label>
-        <input type="text" id="mgrLoginUser" placeholder="أدخل اليوزر...">
+        <span class="helper-text">أدخل اسم المستخدم الذي أنشأه لك المشرف التقني.</span>
+        <input type="text" id="mgrLoginUser" placeholder="مثال: nidal">
       </div>
       <div class="form-group">
         <label>الكود السري</label>
-        <input type="password" id="mgrLoginPin" placeholder="أدخل الكود السري...">
+        <span class="helper-text">أدخل كودك السري (أو الكود الافتراضي 1234 عند أول دخول).</span>
+        <input type="password" id="mgrLoginPin" placeholder="الكود السري...">
       </div>
       <button class="btn btn-primary btn-block" onclick="loginManager()">دخول المسؤول</button>
     </div>
@@ -405,8 +430,9 @@
         أنت تستخدم الكود الافتراضي (1234). لحماية أمان المخيم ومنع انتحال الصلاحيات، يجب عليك تعيين كود سري خاص بك الآن قبل الدخول للنظام.
       </div>
       <div class="form-group">
-        <label>الكود السري الجديد (لا يقل عن 4 خانات ولا يساوي 1234)</label>
-        <input type="password" id="mgrForceNewPin" placeholder="أدخل كودك الجديد...">
+        <label>الكود السري الجديد الخاص بك</label>
+        <span class="helper-text">يجب ألا يقل عن 4 خانات وألا يساوي 1234.</span>
+        <input type="password" id="mgrForceNewPin" placeholder="كودك الجديد...">
       </div>
       <button class="btn btn-primary btn-block" onclick="completeManagerForcePin()">تأكيد وحفظ الكود السري</button>
     </div>
@@ -419,7 +445,7 @@
         <div class="sub-tabs" style="margin-bottom:0;">
           <button class="sub-tab active" onclick="switchMgrTab('families')" id="mtab-families">إدارة العائلات والنقاط</button>
           <button class="sub-tab" onclick="switchMgrTab('distribute')" id="mtab-distribute">توزيع المساعدات والتفويج</button>
-          <button class="sub-tab" onclick="switchMgrTab('audit')" id="mtab-audit">سجل الحركات الرقابي (Log)</button>
+          <button class="sub-tab" onclick="switchMgrTab('audit')" id="mtab-audit">سجل الحركات الرقابي</button>
           <button class="sub-tab" onclick="switchMgrTab('settings')" id="mtab-settings">النسخ الاحتياطي وحسابي</button>
         </div>
         <button class="btn btn-outline btn-sm" onclick="logoutManager()">خروج (<span id="mgrCurrentName"></span>)</button>
@@ -435,11 +461,13 @@
           <input type="hidden" id="editFamInternalId">
           <div class="grid-2">
             <div class="form-group">
-              <label>رقم الخيمة (فريد)</label>
+              <label>رقم العائلة (فريد)</label>
+              <span class="helper-text">الرقم التسلسلي المميز للعائلة داخل المخيم (لا يتكرر لعائلتين).</span>
               <input type="number" id="fTentNum" placeholder="مثال: 1">
             </div>
             <div class="form-group">
-              <label>اسم رب الأسرة (سري للإدارة فقط)</label>
+              <label>اسم رب الأسرة</label>
+              <span class="helper-text">الاسم الكامل لرب الأسرة (يظهر للإدارة ولصاحب البطاقة فقط ولا يظهر للعامة).</span>
               <input type="text" id="fHeadName" placeholder="الاسم الرباعي...">
             </div>
           </div>
@@ -447,15 +475,17 @@
           <div class="item-box">
             <div class="item-header">1. قطاع القدرة البدنية وتوفر المعيل (الحد الأقصى 30 نقطة)</div>
             <div class="form-group">
-              <label>حالة المعيل الأساسي للخيمة</label>
-              <select id="fGuardianStatus" onchange="calcPreviewScore()">
-                <option value="0">يوجد معيل رجل سليم قادر (دون 60 سنة) — (0 نقطة)</option>
-                <option value="20">رب أسرة يعاني من عجز بدني جزئي أو إصابة تعيقه عن العمل الشاق — (20 نقطة)</option>
-                <option value="30">غياب كلي للمعيل القادر (أرملة / مطلقة / زوجة أسير أو مفقود / شيخ فوق 60 بلا شاب قادر) — (30 نقطة)</option>
+              <label>حالة القدرة البدنية للمعيل داخل العائلة</label>
+              <span class="helper-text">يقيس هذا البند وجود رجل شاب قادر بدنياً (بين 18 و60 عاماً) داخل العائلة للقيام بالأعمال الشاقة كحمل المياه والوقوف في الطوابير، سواء كان الأب نفسه أو ابناً بالغاً يقيم معهم.</span>
+              <select id="fGuardianStatus" onchange="handleGuardianStatusChange()">
+                <option value="0">[0 نقطة] توفر رجل بالغ سليم وقادر بدنياً (18 - 60 عاماً) ضمن أفراد العائلة</option>
+                <option value="20">[20 نقطة] معيل يعاني من عجز بدني أو إصابة تعيقه عن حمل الأثقال ولا يوجد شاب بديل</option>
+                <option value="30">[30 نقطة] خلو العائلة تماماً من أي رجل قادر (أسرة تديرها امرأة / أو مسن دون شباب)</option>
               </select>
             </div>
             <div class="form-group">
-              <label>عدد الأيتام القُصّر المكفولين في خيمة رجل سليم (10 نقاط لكل يتيم بسقف 20 نقطة)</label>
+              <label>عدد الأيتام المكفولين في كنف عائلة يعيلها رجل سليم</label>
+              <span class="helper-text" id="orphanHelperText">يُمنح 10 نقاط عن كل يتيم قاصر مكفول داخل عائلة رجل سليم (بسقف 20 نقطة) تعويضاً عن عبء الكفالة. يُقفل هذا الحقل تلقائياً إذا أخذت العائلة العلامة الكاملة (30 نقطة) في غياب المعيل.</span>
               <input type="number" id="fSponsoredOrphans" value="0" min="0" max="10" oninput="calcPreviewScore()">
             </div>
           </div>
@@ -464,25 +494,36 @@
             <div class="item-header">2. قطاع العبء الصحي والإصابات والإعاقة (الحد الأقصى 25 نقطة)</div>
             <div class="grid-3">
               <div class="form-group">
-                <label>حالات درجة أولى: إعاقة شديدة / شلل / بتر / جرح حرب مفتوح / فشل كلوي / أورام (25 نقطة للحالة)</label>
+                <label>حالات الدرجة الأولى (25 نقطة للحالة)</label>
+                <span class="helper-text">إعاقة حركية أو ذهنية شديدة، شلل دماغي/رباعي/نصفي، بتر أطراف، جرح حرب مفتوح أو بلاتين خارجي، فشل كلوي، أورام نشطة، طريح فراش.</span>
                 <input type="number" id="fHealthTier1" value="0" min="0" oninput="calcPreviewScore()">
               </div>
               <div class="form-group">
-                <label>حالات درجة ثانية: سيلياك / سكري أنسولين / قصور قلب / ربو حاد / صرع (15 نقطة للحالة)</label>
+                <label>حالات الدرجة الثانية (15 نقطة للحالة)</label>
+                <span class="helper-text">حساسية القمح (السيلياك)، السكري المعتمد على حقن الأنسولين، قصور القلب المتقدم، الربو الحاد المعتمد على التبخير، الصرع غير المستقر.</span>
                 <input type="number" id="fHealthTier2" value="0" min="0" oninput="calcPreviewScore()">
               </div>
               <div class="form-group">
-                <label>حالات درجة ثالثة: أمراض مزمنة مستقرة كالسكري حبوب أو الضغط (5 نقاط للحالة)</label>
+                <label>حالات الدرجة الثالثة (5 نقاط للحالة)</label>
+                <span class="helper-text">الأمراض المزمنة الشائعة والمستقرة بالحبوب الدوائية مثل: السكري من النوع الثاني، ارتفاع ضغط الدم، الغدة الدرقية، الانزلاق الغضروفي.</span>
                 <input type="number" id="fHealthTier3" value="0" min="0" oninput="calcPreviewScore()">
               </div>
             </div>
           </div>
 
           <div class="item-box">
-            <div class="item-header">3. قطاع الحجم العددي للأسرة (2.5 نقطة لكل فرد — بحد أقصى 25 نقطة)</div>
-            <div class="form-group">
-              <label>إجمالي عدد الأفراد المقيمين فعلياً في الخيمة (يحدد أيضاً شريحة الغذاء)</label>
-              <input type="number" id="fMembersCount" value="1" min="1" max="30" oninput="calcPreviewScore()">
+            <div class="item-header">3. قطاع الحجم العددي للعائلة والفئة التعليمية (الحد الأقصى 25 نقطة)</div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label>إجمالي عدد أفراد العائلة المقيمين فعلياً بالمخيم</label>
+                <span class="helper-text">يُحتسب 2.5 نقطة عن كل فرد (بحد أقصى 25 نقطة)، كما يحدد هذا الرقم شريحة الحصة الغذائية (1-5: حصة | 6-8: حصة ونصف | 9 فأكثر: حصتان).</span>
+                <input type="number" id="fMembersCount" value="1" min="1" max="35" oninput="calcPreviewScore()">
+              </div>
+              <div class="form-group">
+                <label>عدد الأبناء في سن التعليم والطفولة (من 5 إلى 18 سنة)</label>
+                <span class="helper-text">يُستخدم هذا الرقم لإدراج العائلة تلقائياً في طابور «مسار الدعم التعليمي والنفسي»، واستبعاد العائلات التي لا تضم أبناءً في هذا السن.</span>
+                <input type="number" id="fSchoolAgeCount" value="0" min="0" max="25">
+              </div>
             </div>
           </div>
 
@@ -490,37 +531,40 @@
             <div class="item-header">4. قطاع الفئات العمرية الحساسة والحمل (الحد الأقصى 20 نقطة)</div>
             <div class="grid-2">
               <div class="form-group">
-                <label>عدد الرضع (دون سنتين) + الحوامل المثبتات + سوء التغذية الحاد (8 نقاط للحالة)</label>
+                <label>الرضع (دون سنتين) + الحوامل + سوء التغذية الحاد (8 نقاط للحالة)</label>
+                <span class="helper-text">الأطفال أقل من سنتين بشهادة الميلاد، والحوامل ببطاقة متابعة طبية، وحالات سوء التغذية الحاد. (يُؤهل العائلة تلقائياً لمسار الأمومة والرضع).</span>
                 <input type="number" id="fSensHigh" value="0" min="0" oninput="calcPreviewScore()">
               </div>
               <div class="form-group">
-                <label>عدد الأطفال (من سنتين إلى 5 سنوات) + المسنين (فوق 60 سنة) (4 نقاط للحالة)</label>
+                <label>الأطفال (من سنتين إلى 5 سنوات) + المسنون (فوق 60 سنة) (4 نقاط للحالة)</label>
+                <span class="helper-text">عدد الأطفال في سن ما قبل المدرسة (2 - 5 سنوات) مضافاً إليه عدد كبار السن الذين أتموا 60 عاماً فأكثر ضمن العائلة.</span>
                 <input type="number" id="fSensMed" value="0" min="0" oninput="calcPreviewScore()">
               </div>
             </div>
           </div>
 
           <div class="item-box">
-            <div class="item-header">5. الاحتياج الميداني الفعلي للأصول (لبوابة الفرز المزدوج والمسارات الخاصة)</div>
+            <div class="item-header">5. الاحتياج الميداني الفعلي للأصول (لأولوية الفرز المزدوج)</div>
+            <span class="helper-text" style="margin-bottom:8px;">العائلة المحدد لها احتياج فعلي هنا تُقدم على غيرها عند توزيع هذه الأصول، وبمجرد استلامها للمادة من الرتبة الرئيسية (أ) يتحول وضعها إلى «مكتفية» تلقائياً.</span>
             <div class="checkbox-row">
               <input type="checkbox" id="fNeedShelter">
-              <label for="fNeedShelter">تحتاج تدعيم مأوى عاجل (شادر تالف / تسريب مطر / بدون خيمة)</label>
+              <label for="fNeedShelter">تحتاج تدعيم مأوى عاجل (تلف الشادر / تسريب مياه الأمطار / عائلة مستضافة بلا مأوى)</label>
             </div>
             <div class="checkbox-row">
               <input type="checkbox" id="fNeedLight">
-              <label for="fNeedLight">تفتقر لوسيلة إضاءة (تحتاج كشاف إنارة / طاقة)</label>
+              <label for="fNeedLight">تفتقر لوسيلة إضاءة منزلية (تحتاج كشاف إنارة أو مصدر طاقة)</label>
             </div>
             <div class="checkbox-row">
               <input type="checkbox" id="fNeedWaterVessel">
-              <label for="fNeedWaterVessel">تفتقر لأوعية أو برميل تخزين مياه منزلي</label>
+              <label for="fNeedWaterVessel">تفتقر لأوعية أو جالونات أو برميل حفظ وتخزين المياه</label>
             </div>
             <div class="checkbox-row">
               <input type="checkbox" id="fNeedBedding">
-              <label for="fNeedBedding">تفتقر لفرشات نوم أو بطانيات أو أدوات مطبخ</label>
+              <label for="fNeedBedding">تفتقر لفرشات نوم أو بطانيات شتوية أو أواني طهي أساسية</label>
             </div>
             <div class="checkbox-row">
               <input type="checkbox" id="fIsCommittee">
-              <label for="fIsCommittee" style="color:var(--danger); font-weight:700;">هذه خيمة أحد أعضاء لجنة إدارة المخيم الثلاثة (تخضع للمادة 6 - تسليم عبر الشاهد المحايد)</label>
+              <label for="fIsCommittee" style="color:var(--danger); font-weight:700;">هذه عائلة أحد أعضاء لجنة إدارة المخيم الثلاثة (تخضع للمادة 6 — تسليم عبر الشاهد المحايد في آخر الكشف)</label>
             </div>
           </div>
 
@@ -530,8 +574,9 @@
           </div>
 
           <div class="form-group">
-            <label>سبب الإضافة أو التعديل + اسم الشاهد أو المستند المعتمد (إلزامي للتوثيق في السجل)</label>
-            <input type="text" id="fActionReason" placeholder="مثال: تسجيل أولي بموجب كرت الوكالة والهوية / أو تعديل لإضافة مولود جديد...">
+            <label>المستند المعتمد / سبب الإجراء (إلزامي للتوثيق الرقابي)</label>
+            <span class="helper-text">اكتب الوثيقة التي استندت إليها في تسجيل العائلة أو تعديل نقاطها (مثال: كرت الوكالة والهوية، شهادة ميلاد رضيع، تقرير طبي، معاينة ميدانية...).</span>
+            <input type="text" id="fActionReason" placeholder="المستند المعتمد أو السبب...">
           </div>
 
           <button class="btn btn-primary btn-block" onclick="saveFamily()">حفظ بيانات العائلة في السجل</button>
@@ -540,7 +585,7 @@
         <div class="card">
           <div class="card-title">
             <span>قائمة العائلات المسجلة (مرتبة حسب طابور الأولوية)</span>
-            <input type="text" id="mgrSearchFam" placeholder="بحث برقم الخيمة أو الاسم..." oninput="renderManagerFamilies()" style="max-width:240px;">
+            <input type="text" id="mgrSearchFam" placeholder="بحث برقم العائلة أو الاسم..." oninput="renderManagerFamilies()" style="max-width:240px;">
           </div>
           <div id="mgrFamiliesList"></div>
         </div>
@@ -553,12 +598,13 @@
           <div class="grid-2">
             <div class="form-group">
               <label>اختر مسار المساعدة (9 مسارات مستقلة)</label>
-              <select id="distTrack" onchange="previewDistributionBatch()">
+              <span class="helper-text">كل مسار يدور بمؤشر مستقل خاص به، ولا تؤثر استلامات مسار على مسار آخر.</span>
+              <select id="distTrack" onchange="handleTrackSelectionChange()">
                 <option value="food">1. المسار الغذائي والتمويني</option>
                 <option value="cash">2. مسار المساعدات النقدية والقسائم</option>
                 <option value="shelter">3. مسار أصول الإيواء والشوادر</option>
                 <option value="nfi">4. مسار الأصول المنزلية والإنارة</option>
-                <option value="wash">5. مسار المياه والصرف الصحي والنظافة</option>
+                <option value="wash">5. مسار المنظفات وأدوات النظافة وتخزين المياه</option>
                 <option value="infant">6. مسار الأمومة والطفولة والرضع</option>
                 <option value="health">7. مسار الرعاية الصحية والإعاقة</option>
                 <option value="clothing">8. مسار الكسوة والأحذية</option>
@@ -567,9 +613,10 @@
             </div>
             <div class="form-group">
               <label>رتبة المساعدة (المادة الرابعة من الميثاق)</label>
+              <span class="helper-text">الرتبة (أ) للمساعدات الأساسية الكاملة، والرتبة (ب) للإعانات الخفيفة أو التكميلية وتدور بمؤشر مستقل دون إسقاط الحق في الرتبة (أ).</span>
               <select id="distRank" onchange="previewDistributionBatch()">
                 <option value="A">الرتبة الرئيسية (أ) — استحقاق أساسي يحرك مؤشر الدورة الرئيسية</option>
-                <option value="B">الرتبة التكميلية (ب) — إعانة طارئة/خفيفة تدور بمؤشر مستقل ولا تسقط رتبة (أ)</option>
+                <option value="B">الرتبة التكميلية (ب) — إعانة طارئة/خفيفة تدور بمؤشر مستقل</option>
               </select>
             </div>
           </div>
@@ -577,39 +624,44 @@
           <div class="grid-2">
             <div class="form-group">
               <label>وصف المادة الواردة (يظهر في الإعلان العام)</label>
-              <input type="text" id="distItemName" placeholder="مثال: طرد غذائي كامل / منحة 500 شيكل / شادر أممي / كشاف...">
+              <span class="helper-text">اكتب اسم الصنف الموزع بوضوح كما سيظهر لأهالي المخيم في لوحة الشفافية.</span>
+              <input type="text" id="distItemName" placeholder="مثال: طرد غذائي / شادر / كشاف...">
             </div>
             <div class="form-group">
               <label>الكمية المتوفرة للتوزيع الآن (عدد الحصص أو القطع)</label>
+              <span class="helper-text">تُوزع الكمية بالكامل؛ وإذا زادت كمية الأصول عن عدد المحتاجين المسجلين، يُستكمل الباقي تلقائياً من الطابور العام.</span>
               <input type="number" id="distQty" value="5" min="1" oninput="previewDistributionBatch()">
             </div>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
-              <label>معيار الفرز لهذه الشحنة</label>
+              <label>معيار الفرز والأهلية لهذه الشحنة</label>
+              <span class="helper-text">يتحدد تلقائياً حسب طبيعة المسار، ويمكنك تخصيصه لفرز أصل محدد (كالكشافات أو أوعية المياه) مع استكمال الفائض من الطابور العام.</span>
               <select id="distFilterMode" onchange="previewDistributionBatch()">
-                <option value="general">تفويج عام لجميع خيام المخيم بالتسلسل</option>
-                <option value="need_shelter">فرز مزدوج: الخيام المتضررة المحتاجة لشادر/مأوى فقط</option>
-                <option value="need_light">فرز مزدوج: الخيام الفاقدة لوسيلة الإضاءة فقط</option>
-                <option value="need_water">فرز مزدوج: الخيام الفاقدة لأوعية تخزين المياه فقط</option>
-                <option value="need_bedding">فرز مزدوج: الخيام المحتاجة لفرشات/بطانيات/مطبخ فقط</option>
-                <option value="target_infant">مسار خاص: الخيام المسجل بها رضع أو حوامل فقط</option>
-                <option value="target_health">مسار خاص: الخيام المسجل بها إعاقة أو أمراض حرجة فقط</option>
+                <option value="general">تفويج عام لجميع عائلات المخيم بالتسلسل</option>
+                <option value="need_shelter">فرز مزدوج: العائلات المحتاجة لشادر/مأوى أولاً (ثم استكمال الفائض من الطابور العام)</option>
+                <option value="need_light">فرز مزدوج: العائلات الفاقدة للإضاءة أولاً (ثم استكمال الفائض من الطابور العام)</option>
+                <option value="need_water">فرز مزدوج: العائلات الفاقدة لأوعية المياه أولاً (ثم استكمال الفائض من الطابور العام)</option>
+                <option value="need_bedding">فرز مزدوج: العائلات المحتاجة لفرشات/بطانيات/مطبخ أولاً (ثم استكمال الفائض من الطابور العام)</option>
+                <option value="target_infant">مسار فئوي مغلق: العائلات المسجل لديها رضع أو حوامل أو سوء تغذية فقط</option>
+                <option value="target_health">مسار فئوي مغلق: العائلات المسجل لديها إعاقة أو إصابات أو أمراض فقط</option>
+                <option value="target_edu">مسار فئوي مغلق: العائلات المسجل لديها أبناء في سن التعليم (5-18 سنة) فقط</option>
               </select>
             </div>
             <div class="form-group">
-              <label>تطبيق شرائح الكمية المزدوجة (1 / 1.5 / 2)؟</label>
+              <label>تطبيق شرائح الكمية حسب عدد الأفراد (1 / 1.5 / 2)؟</label>
+              <span class="helper-text">يُفعّل في الغذاء الأساسي والمياه لإعطاء العائلات الكبيرة (6-8 أفراد: حصة ونصف، 9 فأكثر: حصتين).</span>
               <select id="distUseTiers" onchange="previewDistributionBatch()">
-                <option value="no">لا — قطعة/حصة واحدة لكل خيمة مستحقة</option>
-                <option value="yes">نعم — صرف حسب شريحة عدد الأفراد (للغذاء العام)</option>
+                <option value="yes">نعم — صرف حسب شريحة عدد أفراد العائلة</option>
+                <option value="no">لا — قطعة أو حصة واحدة متساوية لكل عائلة مستحقة</option>
               </select>
             </div>
           </div>
 
           <div class="checkbox-row">
             <input type="checkbox" id="distEnforceWeeklyCap" checked onchange="previewDistributionBatch()">
-            <label for="distEnforceWeeklyCap">تفعيل قاعدة «منع التكدس الأسبوعي» (تأجيل من استلم مساعدتين مختلفتين خلال آخر 7 أيام لغير الطوارئ)</label>
+            <label for="distEnforceWeeklyCap">تفعيل قاعدة «منع التكدس الأسبوعي» (تأجيل العائلة التي استلمت مساعدتين مختلفتين خلال نفس الأسبوع لإتاحة الفرصة لبقية العائلات)</label>
           </div>
 
           <div class="item-box" style="margin-top:12px;">
@@ -623,11 +675,13 @@
           <div class="grid-2" style="margin-top:12px;">
             <div class="form-group">
               <label>اسم الشاهد المجتمعي المحايد الحاضر للتوزيع (إلزامي)</label>
-              <input type="text" id="distWitness" placeholder="أدخل اسم الشاهد من أهالي المخيم...">
+              <span class="helper-text">اكتب الاسم الثلاثي للشاهد الحاضر من أهالي المخيم ورقم عائلته لتوثيقه في لوحة الشفافية والسجل.</span>
+              <input type="text" id="distWitness" placeholder="مثال: محمود عابد - عائلة 14">
             </div>
             <div class="form-group">
-              <label>الجهة المانحة أو ملاحظات الإعلان</label>
-              <input type="text" id="distNotes" placeholder="مثال: مبادرة محلية / مؤسسة إغاثية...">
+              <label>الجهة المانحة أو ملاحظات الإعلان (اختياري)</label>
+              <span class="helper-text">أي توضيح إضافي يظهر للأهالي في إعلان التوزيع.</span>
+              <input type="text" id="distNotes" placeholder="مثال: مبادرة خيرية...">
             </div>
           </div>
 
@@ -642,15 +696,16 @@
             <span>سجل الحركات الرقابي الشامل (للقراءة فقط — غير قابل للمسح)</span>
           </div>
           <div class="grid-3" style="margin-bottom:12px;">
-            <input type="text" id="auditSearchText" placeholder="بحث بالمسؤول أو رقم الخيمة أو السبب..." oninput="renderAuditLog()">
+            <input type="text" id="auditSearchText" placeholder="بحث بالمسؤول أو رقم العائلة أو السبب..." oninput="renderAuditLog()">
             <select id="auditFilterType" onchange="renderAuditLog()">
               <option value="all">جميع أنواع الحركات</option>
               <option value="SUPERVISOR">حركات المشرف التقني (تنبيهات النظام)</option>
-              <option value="FAMILY_ADD">إضافة عائلة</option>
+              <option value="FAMILY_ADD">إضافة عائلة جديدة</option>
               <option value="FAMILY_EDIT">تعديل بيانات ونقاط عائلة</option>
-              <option value="FAMILY_DELETE">حذف عائلة</option>
-              <option value="PIN_RESET">إعادة ضبط كود سري</option>
-              <option value="DISTRIBUTION">توزيع شحنة مساعدات</option>
+              <option value="FAMILY_DELETE">حذف عائلة من السجل</option>
+              <option value="PIN_RESET">إعادة ضبط الكود السري لعائلة</option>
+              <option value="DISTRIBUTION">صرف دفعة مساعدات</option>
+              <option value="WEEKLY_RESET">تصفير عداد الاستلام الأسبوعي</option>
               <option value="BACKUP_RESTORE">استعادة نسخة احتياطية</option>
             </select>
             <button class="btn btn-outline btn-sm" onclick="resetWeeklyCountersWithLog()">تصفير عداد التكدس الأسبوعي (بداية أسبوع جديد)</button>
@@ -663,34 +718,33 @@
       <div id="mgr-section-settings" class="hidden">
         <div class="card">
           <div class="card-title">إعدادات المزامنة السحابية (Firebase Realtime Database)</div>
-          <div class="muted-text" style="margin-bottom:10px;">
-            لربط جميع الهواتف بقاعدة بيانات واحدة، ضع رابط قاعدة بيانات Firebase المجانية هنا (أو ثبته داخل متغير <code>DEFAULT_FIREBASE_URL</code> في الكود قبل رفعه على GitHub Pages).
-          </div>
           <div class="form-group">
-            <label>رابط قاعدة بيانات Firebase (ينتهي بـ firebaseio.com أو firebasedatabase.app)</label>
-            <input type="text" id="firebaseUrlInput" placeholder="https://your-camp-db-default-rtdb.firebaseio.com">
+            <label>رابط قاعدة بيانات Firebase المعتمد</label>
+            <span class="helper-text">الرابط مثبت مسبقاً في الكود لربط جميع الهواتف تلقائياً، ويمكنك تحديثه أو الضغط على مزامنة فورية للتحقق.</span>
+            <input type="text" id="firebaseUrlInput" placeholder="https://...">
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-primary" onclick="saveFirebaseUrl()">حفظ الرابط والمزامنة الآن</button>
-            <button class="btn btn-secondary" onclick="syncWithCloud(true)">مزامنة يدوية فورية</button>
+            <button class="btn btn-secondary" onclick="syncWithCloud(true, true)">مزامنة يدوية فورية مع السحابة</button>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">النسخ الاحتياطي الشامل (حفظ واستعادة كملف على الهاتف)</div>
-          <div class="muted-text" style="margin-bottom:10px;">
+          <span class="helper-text" style="margin-bottom:10px;">
             يُنصح بتحميل نسخة احتياطية على هاتفك بعد كل جلسة عمل أوفلاين كضمانة إضافية. أي عملية استعادة لملف يتم توثيقها في سجل الحركات الرقابي.
-          </div>
+          </span>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
             <button class="btn btn-primary" onclick="exportBackupFile()">تحميل نسخة احتياطية شاملة (JSON)</button>
           </div>
           <div class="form-group">
-            <label>استعادة نسخة احتياطية محفوظة</label>
+            <label>ملف النسخة الاحتياطية المراد استعادته</label>
             <input type="file" id="restoreFileInput" accept=".json">
           </div>
           <div class="form-group">
-            <label>سبب استعادة النسخة (إلزامي للتوثيق)</label>
-            <input type="text" id="restoreReasonInput" placeholder="اكتب سبب استعادة الملف...">
+            <label>سبب استعادة النسخة واسم الشاهد (إلزامي للتوثيق الرقابي)</label>
+            <span class="helper-text">وضح سبب استرجاع الملف لضمان شفافية الإجراء أمام بقية المسؤولين.</span>
+            <input type="text" id="restoreReasonInput" placeholder="سبب الاستعادة...">
           </div>
           <button class="btn btn-warning" onclick="importBackupFile()">استعادة البيانات من الملف</button>
         </div>
@@ -699,7 +753,8 @@
           <div class="card-title">تغيير الكود السري لحسابي كمسؤول</div>
           <div class="form-group">
             <label>الكود السري الجديد</label>
-            <input type="password" id="mgrNewSelfPin" placeholder="أدخل الكود الجديد...">
+            <span class="helper-text">أدخل كوداً سرياً جديداً لا يقل عن 4 خانات ولا يساوي 1234.</span>
+            <input type="password" id="mgrNewSelfPin" placeholder="الكود الجديد...">
           </div>
           <button class="btn btn-secondary" onclick="changeManagerSelfPin()">تحديث الكود السري</button>
         </div>
@@ -713,7 +768,8 @@
       <div class="card-title">دخول المشرف التقني (إدارة حسابات المسؤولين فقط)</div>
       <div class="form-group">
         <label>الكود السري للمشرف</label>
-        <input type="password" id="supLoginPin" placeholder="الكود الافتراضي عند التشغيل الأول: 1234">
+        <span class="helper-text">الكود الافتراضي عند التشغيل الأول للنظام هو (1234)، ويُرجى تغييره فور الدخول.</span>
+        <input type="password" id="supLoginPin" placeholder="كود المشرف...">
       </div>
       <button class="btn btn-primary btn-block" onclick="loginSupervisor()">دخول المشرف</button>
     </div>
@@ -731,10 +787,12 @@
         <div class="grid-2">
           <div class="form-group">
             <label>الاسم الكامل للمسؤول</label>
+            <span class="helper-text">الاسم الذي سيظهر في توثيق العمليات وسجل الحركات الرقابي.</span>
             <input type="text" id="supNewMgrName" placeholder="مثال: نضال أحمد">
           </div>
           <div class="form-group">
             <label>اسم المستخدم للدخول (اليوزر)</label>
+            <span class="helper-text">حروف إنجليزية أو أرقام بدون مسافات يستخدمها المسؤول لتسجيل الدخول.</span>
             <input type="text" id="supNewMgrUser" placeholder="مثال: nidal">
           </div>
         </div>
@@ -753,7 +811,8 @@
         <div class="card-title">تغيير الكود السري للمشرف</div>
         <div class="form-group">
           <label>الكود السري الجديد للمشرف</label>
-          <input type="password" id="supNewPin" placeholder="أدخل الكود الجديد...">
+          <span class="helper-text">أدخل كوداً سرياً جديداً لا يقل عن 4 خانات لحماية بوابة الإشراف التقني.</span>
+          <input type="password" id="supNewPin" placeholder="الكود الجديد...">
         </div>
         <button class="btn btn-secondary" onclick="supervisorChangeOwnPin()">حفظ كود المشرف الجديد</button>
       </div>
@@ -764,27 +823,40 @@
 
 <script>
 /* ============================================================================
-   إعداد رابط قاعدة بيانات Firebase السحابية
-   ضع رابط Realtime Database الخاص بك بين علامتي التنصيص بالأسفل قبل رفعه على GitHub
+   رابط قاعدة بيانات Firebase السحابية المعتمد للمخيم
    ============================================================================ */
-const DEFAULT_FIREBASE_URL = "https://camp-aid-c6044-default-rtdb.europe-west1.firebasedatabase.app/"; 
+const DEFAULT_FIREBASE_URL = "https://camp-aid-c6044-default-rtdb.europe-west1.firebasedatabase.app";
 
-const STORAGE_KEY = "GAZA_CAMP_FAIR_SYSTEM_V1";
-const FIREBASE_URL_KEY = "GAZA_CAMP_FB_URL";
+const STORAGE_KEY = "GAZA_CAMP_FAIR_SYSTEM_V2";
+const FIREBASE_URL_KEY = "GAZA_CAMP_FB_URL_V2";
 
 const TRACKS = [
-  { id: "food", name: "المسار الغذائي والتمويني" },
-  { id: "cash", name: "مسار المساعدات النقدية والقسائم" },
-  { id: "shelter", name: "مسار أصول الإيواء والشوادر" },
-  { id: "nfi", name: "مسار الأصول المنزلية والإنارة" },
-  { id: "wash", name: "مسار المياه والصرف الصحي والنظافة" },
-  { id: "infant", name: "مسار الأمومة والطفولة والرضع" },
-  { id: "health", name: "مسار الرعاية الصحية والإعاقة" },
-  { id: "clothing", name: "مسار الكسوة والأحذية" },
-  { id: "edu", name: "مسار الدعم التعليمي والنفسي" }
+  { id: "food", name: "المسار الغذائي والتمويني", type: "universal", defaultFilter: "general", defaultTiers: "yes" },
+  { id: "cash", name: "مسار المساعدات النقدية والقسائم", type: "universal", defaultFilter: "general", defaultTiers: "no" },
+  { id: "shelter", name: "مسار أصول الإيواء والشوادر", type: "asset_shelter", defaultFilter: "need_shelter", defaultTiers: "no" },
+  { id: "nfi", name: "مسار الأصول المنزلية والإنارة", type: "asset_nfi", defaultFilter: "need_light", defaultTiers: "no" },
+  { id: "wash", name: "مسار المنظفات وأدوات النظافة وتخزين المياه", type: "universal_wash", defaultFilter: "general", defaultTiers: "no" },
+  { id: "infant", name: "مسار الأمومة والطفولة والرضع", type: "cat_infant", defaultFilter: "target_infant", defaultTiers: "no" },
+  { id: "health", name: "مسار الرعاية الصحية والإعاقة", type: "cat_health", defaultFilter: "target_health", defaultTiers: "no" },
+  { id: "clothing", name: "مسار الكسوة والأحذية", type: "universal", defaultFilter: "general", defaultTiers: "no" },
+  { id: "edu", name: "مسار الدعم التعليمي والنفسي", type: "cat_edu", defaultFilter: "target_edu", defaultTiers: "no" }
 ];
 
-// دالة تشفير قياسية مستقلة (تعمل أوفلاين وعلى file:// وعلى https://)
+// قاموس تعريب جميع أنواع الحركات في السجل الرقابي
+const ACTION_LABELS_AR = {
+  FAMILY_ADD: "إضافة عائلة جديدة",
+  FAMILY_EDIT: "تعديل بيانات ونقاط عائلة",
+  FAMILY_DELETE: "حذف عائلة من السجل",
+  PIN_RESET: "إعادة ضبط الكود السري لعائلة",
+  DISTRIBUTION: "صرف دفعة مساعدات",
+  WEEKLY_RESET: "تصفير عداد الاستلام الأسبوعي",
+  BACKUP_RESTORE: "استعادة نسخة احتياطية",
+  SUPERVISOR_ADD_MGR: "إضافة مسؤول جديد (بواسطة المشرف)",
+  SUPERVISOR_RESET_MGR: "إعادة ضبط كود مسؤول (بواسطة المشرف)",
+  SUPERVISOR_DEL_MGR: "حذف حساب مسؤول (بواسطة المشرف)"
+};
+
+// دالة تشفير قياسية مستقلة للأكواد السرية
 function hashPin(pinStr) {
   const str = "CAMP_SALT_2026_" + String(pinStr).trim();
   let h1 = 0xdeadbeef ^ str.length;
@@ -799,7 +871,7 @@ function hashPin(pinStr) {
   return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
 }
 
-// دالة تنسيق التاريخ والوقت: 01/01/2027 — 02:20 مساءً
+// دالة تنسيق التاريخ والوقت المعتمد: 01/01/2027 — 02:20 مساءً
 function formatCampDateTime(dateObj = new Date()) {
   const d = new Date(dateObj);
   const dd = String(d.getDate()).padStart(2, '0');
@@ -814,30 +886,30 @@ function formatCampDateTime(dateObj = new Date()) {
   return `${dd}/${mm}/${yyyy} — ${hh}:${minutes} ${period}`;
 }
 
-// توليد كود سري عشوائي من 4 أرقام للعائلات (لا يساوي 1234 ولا يتكرر قدر الإمكان)
+// توليد كود سري عشوائي من 4 أرقام للعائلات
 function generateRandom4DigitPin(existingPins = []) {
   let pin = "";
   let attempts = 0;
   do {
     pin = String(Math.floor(1000 + Math.random() * 9000));
     attempts++;
-  } while ((pin === "1234" || existingPins.includes(pin)) && attempts < 200);
+  } while ((pin === "1234" || existingPins.includes(pin)) && attempts < 250);
   return pin;
 }
 
-// الحالة الابتدائية الفارغة للنظام
+// إنشاء حالة ابتدائية (lastUpdatedMs = 0 حتى لا يمسح الهاتف الجديد بيانات السحابة أبداً)
 function createInitialState() {
   const markers = {};
   TRACKS.forEach(t => {
-    markers[t.id] = { A: 0, B: 0, cycleA: 1, cycleB: 1 };
+    markers[t.id] = { servedA: [], servedB: [], cycleA: 1, cycleB: 1 };
   });
   return {
-    version: 1,
-    lastUpdatedMs: Date.now(),
-    lastUpdatedFormatted: formatCampDateTime(),
+    version: 2,
+    lastUpdatedMs: 0,
+    lastUpdatedFormatted: "لم يتم التحديث بعد",
     supervisorPinHash: hashPin("1234"),
-    managers: [],       // يبدأ خالياً من المسؤولين
-    families: [],       // يبدأ خالياً من العائلات
+    managers: [],
+    families: [],
     markers: markers,
     announcements: [],
     auditLogs: []
@@ -848,21 +920,32 @@ let appState = createInitialState();
 let currentManager = null;
 let currentFamilyId = null;
 let supervisorLoggedIn = false;
+let cloudSyncOk = false;
 
-// تحميل البيانات من الذاكرة المحلية
+function normalizeMarkersStructure(stateObj) {
+  if (!stateObj.markers) stateObj.markers = {};
+  TRACKS.forEach(t => {
+    const m = stateObj.markers[t.id] || {};
+    stateObj.markers[t.id] = {
+      servedA: Array.isArray(m.servedA) ? m.servedA : [],
+      servedB: Array.isArray(m.servedB) ? m.servedB : [],
+      cycleA: Number(m.cycleA) || 1,
+      cycleB: Number(m.cycleB) || 1
+    };
+  });
+  if (!Array.isArray(stateObj.managers)) stateObj.managers = [];
+  if (!Array.isArray(stateObj.families)) stateObj.families = [];
+  if (!Array.isArray(stateObj.announcements)) stateObj.announcements = [];
+  if (!Array.isArray(stateObj.auditLogs)) stateObj.auditLogs = [];
+}
+
 function loadLocalState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       appState = Object.assign(createInitialState(), parsed);
-      TRACKS.forEach(t => {
-        if (!appState.markers[t.id]) {
-          appState.markers[t.id] = { A: 0, B: 0, cycleA: 1, cycleB: 1 };
-        }
-      });
-    } else {
-      saveLocalState(false);
+      normalizeMarkersStructure(appState);
     }
   } catch (e) {
     console.error("Failed to load local state:", e);
@@ -870,14 +953,16 @@ function loadLocalState() {
   updateHeaderStatus();
 }
 
-function saveLocalState(updateTime = true) {
-  if (updateTime) {
+function saveLocalState(pushToCloud = true) {
+  if (pushToCloud) {
     appState.lastUpdatedMs = Date.now();
     appState.lastUpdatedFormatted = formatCampDateTime();
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
   updateHeaderStatus();
-  syncWithCloud(false);
+  if (pushToCloud) {
+    syncWithCloud(true, false);
+  }
 }
 
 function getFirebaseUrl() {
@@ -889,21 +974,37 @@ function getFirebaseUrl() {
 function saveFirebaseUrl() {
   const val = document.getElementById("firebaseUrlInput").value.trim();
   localStorage.setItem(FIREBASE_URL_KEY, val);
-  alert("تم حفظ رابط قاعدة البيانات. جاري الاتصال والمزامنة...");
-  syncWithCloud(true);
+  alert("تم حفظ رابط قاعدة البيانات السحابية. جاري الاتصال والمزامنة...");
+  syncWithCloud(true, true);
 }
 
-// مزامنة ذكية مع Firebase مع دمج السجل التراكمي لمنع مسح عمل الزملاء
-async function syncWithCloud(isManual = false) {
-  const fbUrl = getFirebaseUrl();
+function updateConnectionBadgeUI() {
   const dot = document.getElementById("connDot");
   const txt = document.getElementById("connText");
-
-  if (!fbUrl) {
+  if (!navigator.onLine) {
     dot.className = "dot offline";
-    txt.textContent = "وضع محلي (بدون سحابة)";
+    txt.textContent = "أوفلاين (محفوظ بالهاتف — سيتزامن فور عودة الشبكة)";
     return;
   }
+  if (cloudSyncOk) {
+    dot.className = "dot online";
+    txt.textContent = "متصل بالشبكة — متزامن سحابياً";
+  } else {
+    dot.className = "dot offline";
+    txt.textContent = "متصل بالشبكة — جاري فحص السحابة...";
+  }
+}
+
+// مزامنة آمنة مع Firebase: الزوار يقرأون فقط، والتعديلات تدمج سجل الحركات أولاً ثم ترفع
+async function syncWithCloud(allowPush = false, isManual = false) {
+  updateConnectionBadgeUI();
+  if (!navigator.onLine) {
+    if (isManual) alert("هاتفك غير متصل بالإنترنت حالياً. جميع التعديلات محفوظة في الهاتف وستتزامن تلقائياً فور عودة الشبكة.");
+    return;
+  }
+
+  const fbUrl = getFirebaseUrl();
+  if (!fbUrl) return;
 
   try {
     const res = await fetch(`${fbUrl}/camp_data.json`, { cache: "no-store" });
@@ -911,40 +1012,55 @@ async function syncWithCloud(isManual = false) {
     const remoteData = await res.json();
 
     if (!remoteData) {
-      // السحابة فارغة، نرفع بياناتنا إليها
-      await fetch(`${fbUrl}/camp_data.json`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(appState)
-      });
+      // السحابة فارغة تماماً: نرفع إليها فقط إذا كان لدينا بيانات حقيقية أو تعديل إداري
+      if (allowPush && appState.lastUpdatedMs > 0) {
+        await fetch(`${fbUrl}/camp_data.json`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(appState)
+        });
+      }
     } else {
-      // دمج سجل الحركات الرقابي (Audit Logs) والإعلانات حتى لا يضيع أي سطر أبداً
+      normalizeMarkersStructure(remoteData);
+      // دمج سجل الحركات الرقابي حتى لا يضيع أي سطر أبداً
       const mergedLogsMap = new Map();
       (remoteData.auditLogs || []).forEach(l => mergedLogsMap.set(l.id, l));
       (appState.auditLogs || []).forEach(l => mergedLogsMap.set(l.id, l));
       const mergedLogs = Array.from(mergedLogsMap.values()).sort((a, b) => b.timestampMs - a.timestampMs);
 
-      if ((remoteData.lastUpdatedMs || 0) > (appState.lastUpdatedMs || 0)) {
-        appState = Object.assign(createInitialState(), remoteData);
-      }
-      appState.auditLogs = mergedLogs;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      const remoteTime = Number(remoteData.lastUpdatedMs) || 0;
+      const localTime = Number(appState.lastUpdatedMs) || 0;
 
-      await fetch(`${fbUrl}/camp_data.json`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(appState)
-      });
+      if (remoteTime > localTime) {
+        // بيانات السحابة أحدث من الهاتف الحالي
+        appState = Object.assign(createInitialState(), remoteData);
+        normalizeMarkersStructure(appState);
+        appState.auditLogs = mergedLogs;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } else if (allowPush && localTime > remoteTime) {
+        // بيانات الهاتف الحالي أحدث (تم إجراء تعديل بواسطة المسؤول/المشرف/الأسرة)
+        appState.auditLogs = mergedLogs;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        await fetch(`${fbUrl}/camp_data.json`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(appState)
+        });
+      }
     }
 
-    dot.className = "dot online";
-    txt.textContent = "متصل ومزامن سحابياً";
+    cloudSyncOk = true;
+    updateConnectionBadgeUI();
+    updateHeaderStatus();
     refreshAllViews();
     if (isManual) alert("تمت المزامنة السحابية بنجاح.");
   } catch (err) {
+    cloudSyncOk = false;
+    const dot = document.getElementById("connDot");
+    const txt = document.getElementById("connText");
     dot.className = "dot offline";
     txt.textContent = "أوفلاين (محفوظ بالهاتف)";
-    if (isManual) alert("تعذر الاتصال بالسحابة حالياً. جميع تعديلاتك محفوظة على الهاتف وستتزامن تلقائياً فور عودة الإنترنت.");
+    if (isManual) alert("تعذر الوصول لقاعدة البيانات السحابية حالياً. بياناتك محفوظة بأمان على الهاتف.");
   }
 }
 
@@ -953,16 +1069,15 @@ function updateHeaderStatus() {
   if (lbl) lbl.textContent = "آخر تحديث للبيانات: " + (appState.lastUpdatedFormatted || "الآن");
 }
 
-// إضافة سطر في سجل الحركات الرقابي (غير قابل للمسح)
-function addAuditLog(actorName, actorRole, actionType, targetTent, beforeVal, afterVal, reason, witness = "—") {
+function addAuditLog(actorName, actorRole, actionType, targetFamilyNum, beforeVal, afterVal, reason, witness = "—") {
   const entry = {
     id: "LOG_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7),
     timestampMs: Date.now(),
     dateTimeFormatted: formatCampDateTime(),
     actorName,
-    actorRole, // "SUPERVISOR" or "MANAGER"
+    actorRole,
     actionType,
-    targetTent,
+    targetTent: targetFamilyNum,
     beforeVal,
     afterVal,
     reason,
@@ -973,29 +1088,26 @@ function addAuditLog(actorName, actorRole, actionType, targetTent, beforeVal, af
 
 // حساب نقاط العائلة وشريحة الغذاء وفق مصفوفة الـ 100 نقطة المعتمدة
 function calculateFamilyMetrics(data) {
-  // 1. قطاع القدرة والمعيل (الحد الأقصى 30)
   const guardianBase = Number(data.guardianStatus) || 0;
-  const orphanPts = Math.min(20, (Number(data.sponsoredOrphans) || 0) * 10);
+  // إذا كان غياب المعيل الكلي (30 نقطة)، لا تضاف نقاط أيتام إضافية لأن السقف 30
+  const orphanCount = guardianBase === 30 ? 0 : (Number(data.sponsoredOrphans) || 0);
+  const orphanPts = Math.min(20, orphanCount * 10);
   const sector1 = Math.min(30, guardianBase + orphanPts);
 
-  // 2. قطاع الصحة والإعاقة (الحد الأقصى 25)
   const h1 = (Number(data.healthTier1) || 0) * 25;
   const h2 = (Number(data.healthTier2) || 0) * 15;
   const h3 = (Number(data.healthTier3) || 0) * 5;
   const sector2 = Math.min(25, h1 + h2 + h3);
 
-  // 3. قطاع حجم الأسرة (2.5 نقطة لكل فرد بحد أقصى 25)
   const members = Math.max(1, Number(data.membersCount) || 1);
   const sector3 = Math.min(25, members * 2.5);
 
-  // 4. قطاع الفئات الحساسة والحمل (الحد الأقصى 20)
   const sHigh = (Number(data.sensHigh) || 0) * 8;
   const sMed = (Number(data.sensMed) || 0) * 4;
   const sector4 = Math.min(20, sHigh + sMed);
 
   const totalScore = Number((sector1 + sector2 + sector3 + sector4).toFixed(1));
 
-  // شريحة الغذاء حسب العدد الفعلي
   let foodTierLabel = "الشريحة الأولى (حصة واحدة)";
   let foodShares = 1;
   if (members >= 9) {
@@ -1017,7 +1129,7 @@ function calculateFamilyMetrics(data) {
   };
 }
 
-// ترتيب العائلات تنازلياً حسب النقاط، وعند التساوي: الأكثر أفراداً، ثم غياب المعيل، ثم الفئات الحساسة، ثم رقم الخيمة الأصغر
+// ترتيب العائلات تنازلياً بالنقاط، وعند التساوي: الأكثر أفراداً، ثم غياب المعيل، ثم الفئات الحساسة، ثم رقم العائلة الأصغر
 function getSortedFamilies() {
   return [...appState.families].sort((a, b) => {
     if (b.metrics.totalScore !== a.metrics.totalScore) return b.metrics.totalScore - a.metrics.totalScore;
@@ -1028,7 +1140,49 @@ function getSortedFamilies() {
   });
 }
 
-// التنقل بين البوابات الأربع
+// محرك الأهلية الذكي لكل مسار من المسارات التسعة
+function isFamilyEligibleForTrack(fam, trackId) {
+  if (trackId === "infant") {
+    return (Number(fam.sensHigh) || 0) > 0;
+  }
+  if (trackId === "health") {
+    const totalHealth = (Number(fam.healthTier1) || 0) + (Number(fam.healthTier2) || 0) + (Number(fam.healthTier3) || 0);
+    return totalHealth > 0;
+  }
+  if (trackId === "edu") {
+    return (Number(fam.schoolAgeCount) || 0) > 0;
+  }
+  if (trackId === "shelter") {
+    // إذا كان هناك عائلات مسجلة بحاجة مأوى، تكون هي طابور الأولوية؛ وإذا اكتفى الجميع يتاح الطابور العام
+    const anyNeedy = appState.families.some(f => !!f.needShelter);
+    return anyNeedy ? !!fam.needShelter : true;
+  }
+  if (trackId === "nfi") {
+    const anyNeedy = appState.families.some(f => !!f.needLight || !!f.needBedding);
+    return anyNeedy ? (!!fam.needLight || !!fam.needBedding) : true;
+  }
+  return true; // المسارات العامة (الغذائي، النقدي، المنظفات، الكسوة)
+}
+
+// جلب طابور المسار الفعلي مرتباً حسب من لم يستلم بعد في الدورة الحالية ثم من استلم
+function getTrackActiveQueue(trackId, rank = "A") {
+  const sorted = getSortedFamilies();
+  const eligible = sorted.filter(f => isFamilyEligibleForTrack(f, trackId));
+  const m = appState.markers[trackId] || { servedA: [], servedB: [], cycleA: 1, cycleB: 1 };
+  const servedList = rank === "A" ? (m.servedA || []) : (m.servedB || []);
+
+  const unserved = eligible.filter(f => !servedList.includes(f.id));
+  const alreadyServed = eligible.filter(f => servedList.includes(f.id));
+
+  return {
+    eligible,
+    unserved,
+    alreadyServed,
+    orderedQueue: [...unserved, ...alreadyServed],
+    cycle: rank === "A" ? (m.cycleA || 1) : (m.cycleB || 1)
+  };
+}
+
 function switchPortal(portal) {
   ["public", "family", "manager", "supervisor"].forEach(p => {
     document.getElementById("portal-" + p).classList.toggle("hidden", p !== portal);
@@ -1052,29 +1206,33 @@ function refreshAllViews() {
 /* ==================== 1. منطق البوابة العامة ==================== */
 function renderPublicPortal() {
   const sorted = getSortedFamilies();
-  document.getElementById("publicTotalFamiliesBadge").textContent = `إجمالي الخيام المسجلة: ${sorted.length}`;
+  document.getElementById("publicTotalFamiliesBadge").textContent = `إجمالي العائلات المسجلة: ${sorted.length}`;
 
-  // مؤشرات التوقف
   const markersContainer = document.getElementById("publicMarkersList");
   markersContainer.innerHTML = "";
   TRACKS.forEach(t => {
-    const m = appState.markers[t.id] || { A: 0, B: 0, cycleA: 1, cycleB: 1 };
-    const nextRankA = sorted.length > 0 ? ((m.A % sorted.length) + 1) : "—";
-    const nextTentA = sorted.length > 0 ? sorted[m.A % sorted.length].tentNum : "—";
-    const nextRankB = sorted.length > 0 ? ((m.B % sorted.length) + 1) : "—";
-    const nextTentB = sorted.length > 0 ? sorted[m.B % sorted.length].tentNum : "—";
+    const qA = getTrackActiveQueue(t.id, "A");
+    const qB = getTrackActiveQueue(t.id, "B");
+
+    const nextFamA = qA.orderedQueue.length > 0 ? qA.orderedQueue[0] : null;
+    const nextFamB = qB.orderedQueue.length > 0 ? qB.orderedQueue[0] : null;
 
     const div = document.createElement("div");
     div.className = "item-box";
     div.innerHTML = `
-      <div class="item-header" style="color:var(--primary); font-size:0.9rem;">${t.name}</div>
-      <div style="font-size:0.83rem; margin-bottom:4px;">
-        <span class="badge badge-primary">رتبة (أ) رئيسية - دورة ${m.cycleA}</span><br>
-        الدور القادم يبدأ من الترتيب: <strong>#${nextRankA}</strong> (خيمة رقم <strong>${nextTentA}</strong>)
+      <div class="item-header" style="color:var(--primary); font-size:0.9rem;">
+        <span>${t.name}</span>
+        <span class="badge badge-muted">المؤهلون: ${qA.eligible.length} عائلة</span>
       </div>
-      <div style="font-size:0.83rem; border-top:1px dashed var(--border); padding-top:4px;">
-        <span class="badge badge-warning">رتبة (ب) تكميلية - دورة ${m.cycleB}</span><br>
-        الدور القادم يبدأ من الترتيب: <strong>#${nextRankB}</strong> (خيمة رقم <strong>${nextTentB}</strong>)
+      <div style="font-size:0.83rem; margin-bottom:6px;">
+        <span class="badge badge-primary">رتبة (أ) رئيسية - دورة ${qA.cycle}</span>
+        <span class="muted-text"> (استلم ${qA.alreadyServed.length} من ${qA.eligible.length})</span><br>
+        ${nextFamA ? `الدور القادم يبدأ من: <strong>عائلة رقم (${nextFamA.tentNum})</strong>` : `<span class="muted-text">لا توجد عائلات مؤهلة حالياً</span>`}
+      </div>
+      <div style="font-size:0.83rem; border-top:1px dashed var(--border); padding-top:6px;">
+        <span class="badge badge-warning">رتبة (ب) تكميلية - دورة ${qB.cycle}</span>
+        <span class="muted-text"> (استلم ${qB.alreadyServed.length} من ${qB.eligible.length})</span><br>
+        ${nextFamB ? `الدور القادم يبدأ من: <strong>عائلة رقم (${nextFamB.tentNum})</strong>` : `<span class="muted-text">لا توجد عائلات مؤهلة حالياً</span>`}
       </div>
     `;
     markersContainer.appendChild(div);
@@ -1092,10 +1250,10 @@ function renderPublicPortal() {
           <span class="badge ${a.rank === 'A' ? 'badge-primary' : 'badge-warning'}">الرتبة (${a.rank === 'A' ? 'أ - رئيسية' : 'ب - تكميلية'})</span>
         </div>
         <div style="font-size:0.88rem; margin-bottom:4px;">
-          <strong>الكمية الموزعة:</strong> ${a.totalQtyDistributed} | <strong>عدد الخيام المستفيدة:</strong> ${a.tentsServed.length} خيمة
+          <strong>الكمية الموزعة:</strong> ${a.totalQtyDistributed} | <strong>عدد العائلات المستفيدة:</strong> ${a.tentsServed.length} عائلة
         </div>
         <div style="font-size:0.85rem; margin-bottom:4px;">
-          <strong>أرقام الخيام التي استلمت:</strong> ${a.tentsServed.map(t => `خيمة (${t})`).join(" ، ")}
+          <strong>أرقام العائلات التي استلمت:</strong> ${a.tentsServed.map(t => `عائلة (${t})`).join(" ، ")}
         </div>
         <div class="muted-text">
           التاريخ والوقت: ${a.dateTime} | الشاهد المحايد: <strong>${a.witness}</strong> | المسؤول المنفذ: ${a.managerName}
@@ -1114,8 +1272,8 @@ function renderPublicPortal() {
       <div class="item-box" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 14px;">
         <div>
           <span class="badge badge-primary">الترتيب العام: #${idx + 1}</span>
-          <strong style="margin-right:8px; font-size:1rem;">خيمة رقم (${f.tentNum})</strong>
-          ${f.isCommittee ? `<span class="badge badge-danger" style="margin-right:6px;">خيمة عضو لجنة (رقابة الشاهد)</span>` : ""}
+          <strong style="margin-right:8px; font-size:1rem;">عائلة رقم (${f.tentNum})</strong>
+          ${f.isCommittee ? `<span class="badge badge-danger" style="margin-right:6px;">عائلة عضو لجنة (رقابة الشاهد)</span>` : ""}
         </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <span class="badge badge-teal">مجموع النقاط: ${f.metrics.totalScore} / 100</span>
@@ -1126,13 +1284,13 @@ function renderPublicPortal() {
   }
 }
 
-/* ==================== 2. منطق بوابة الأسرة ==================== */
+/* ==================== 2. منطق بوابة العائلة ==================== */
 function loginFamily() {
-  const tentNum = document.getElementById("famLoginTent").value.trim();
+  const famNum = document.getElementById("famLoginNum").value.trim();
   const pin = document.getElementById("famLoginPin").value.trim();
-  const fam = appState.families.find(f => String(f.tentNum) === String(tentNum));
+  const fam = appState.families.find(f => String(f.tentNum) === String(famNum));
   if (!fam || fam.pinHash !== hashPin(pin)) {
-    alert("رقم الخيمة أو الكود السري غير صحيح. إذا نسيت الكود السري، راجع أحد مسؤولي المخيم الثلاثة.");
+    alert("رقم العائلة أو الكود السري غير صحيح. إذا نسيت الكود السري، راجع أحد مسؤولي المخيم الثلاثة.");
     return;
   }
   currentFamilyId = fam.id;
@@ -1158,58 +1316,108 @@ function renderFamilyDashboard() {
   const fam = sorted[idx];
   const rank = idx + 1;
 
-  document.getElementById("famDashTitle").textContent = `بطاقة خيمة رقم (${fam.tentNum}) — ${fam.headName}`;
+  document.getElementById("famDashTitle").textContent = `بطاقة العائلة رقم (${fam.tentNum}) — ${fam.headName}`;
   document.getElementById("famSummaryBox").innerHTML = `
     <div class="score-preview" style="margin-top:0;">
-      <div>ترتيب الخيمة في طابور المخيم: <strong style="font-size:1.25rem; color:#fbbf24;">#${rank}</strong> من أصل ${sorted.length}</div>
+      <div>ترتيب العائلة في طابور المخيم: <strong style="font-size:1.25rem; color:#fbbf24;">#${rank}</strong> من أصل ${sorted.length}</div>
       <div>مجموع النقاط: <strong style="font-size:1.25rem; color:#4ade80;">${fam.metrics.totalScore}</strong> / 100</div>
       <div>الاستحقاق الغذائي: <strong>${fam.metrics.foodTierLabel}</strong></div>
     </div>
     <div class="grid-2">
       <div class="item-box">
-        <strong>تفصيل نقاط خيمتك (للتحقق من دقة بياناتك):</strong>
+        <strong>تفصيل نقاط عائلتك (للتحقق من دقة بياناتك):</strong>
         <div style="font-size:0.88rem; margin-top:6px;">
-          • قطاع القدرة والمعيل: <strong>${fam.metrics.sector1}</strong> / 30 نقطة<br>
+          • قطاع القدرة البدنية والمعيل: <strong>${fam.metrics.sector1}</strong> / 30 نقطة<br>
           • قطاع العبء الصحي والإعاقة: <strong>${fam.metrics.sector2}</strong> / 25 نقطة<br>
           • قطاع عدد الأفراد (${fam.membersCount} أفراد): <strong>${fam.metrics.sector3}</strong> / 25 نقطة<br>
           • قطاع الفئات الحساسة والحمل: <strong>${fam.metrics.sector4}</strong> / 20 نقطة
         </div>
       </div>
       <div class="item-box">
-        <strong>حالة الاحتياج الميداني المسجلة للخيمة:</strong>
+        <strong>حالة الاحتياج الميداني المسجلة للعائلة:</strong>
         <div style="font-size:0.88rem; margin-top:6px;">
-          • احتياج شادر/تدعيم مأوى: <strong>${fam.needShelter ? 'نعم (مسجل في قائمة الاحتياج)' : 'غير مسجل'}</strong><br>
-          • احتياج كشاف إنارة: <strong>${fam.needLight ? 'نعم (مسجل في قائمة الاحتياج)' : 'غير مسجل'}</strong><br>
-          • احتياج أوعية/خزان مياه: <strong>${fam.needWaterVessel ? 'نعم (مسجل في قائمة الاحتياج)' : 'غير مسجل'}</strong><br>
-          • احتياج فرشات/بطانيات/مطبخ: <strong>${fam.needBedding ? 'نعم (مسجل في قائمة الاحتياج)' : 'غير مسجل'}</strong>
+          • احتياج شادر/تدعيم مأوى: <strong>${fam.needShelter ? 'نعم (مدرج في أولوية الاحتياج)' : 'مكتفٍ (ضمن الطابور العام)'}</strong><br>
+          • احتياج كشاف إنارة: <strong>${fam.needLight ? 'نعم (مدرج في أولوية الاحتياج)' : 'مكتفٍ (ضمن الطابور العام)'}</strong><br>
+          • احتياج أوعية/خزان مياه: <strong>${fam.needWaterVessel ? 'نعم (مدرج في أولوية الاحتياج)' : 'مكتفٍ (ضمن الطابور العام)'}</strong><br>
+          • احتياج فرشات/بطانيات/مطبخ: <strong>${fam.needBedding ? 'نعم (مدرج في أولوية الاحتياج)' : 'مكتفٍ (ضمن الطابور العام)'}</strong>
         </div>
       </div>
     </div>
   `;
 
-  // كم خيمة أمامك في كل مسار
+  // موقع العائلة في المسارات التسعة مع الأهلية الذكية
   const qBox = document.getElementById("famQueueStatusBox");
   qBox.innerHTML = TRACKS.map(t => {
-    const m = appState.markers[t.id] || { A: 0, B: 0 };
-    const posA = m.A % sorted.length;
-    const aheadA = idx >= posA ? (idx - posA) : (sorted.length - posA + idx);
-    const posB = m.B % sorted.length;
-    const aheadB = idx >= posB ? (idx - posB) : (sorted.length - posB + idx);
+    // فحص المسارات الفئوية المغلقة أولاً
+    if (t.id === "infant" && (Number(fam.sensHigh) || 0) === 0) {
+      return `
+        <div class="item-box highlight-excluded">
+          <div class="item-header"><span>${t.name}</span><span class="badge badge-muted">خارج المسار</span></div>
+          <div class="muted-text">عائلتك غير مدرجة في هذا المسار الفئوي لعدم وجود أطفال رضع (دون سنتين) أو حوامل في بيانات العائلة.</div>
+        </div>
+      `;
+    }
+    if (t.id === "health" && ((Number(fam.healthTier1) || 0) + (Number(fam.healthTier2) || 0) + (Number(fam.healthTier3) || 0)) === 0) {
+      return `
+        <div class="item-box highlight-excluded">
+          <div class="item-header"><span>${t.name}</span><span class="badge badge-muted">خارج المسار</span></div>
+          <div class="muted-text">عائلتك غير مدرجة في هذا المسار الفئوي لعدم وجود حالات إعاقة أو أمراض مزمنة مسجلة في بيانات العائلة.</div>
+        </div>
+      `;
+    }
+    if (t.id === "edu" && (Number(fam.schoolAgeCount) || 0) === 0) {
+      return `
+        <div class="item-box highlight-excluded">
+          <div class="item-header"><span>${t.name}</span><span class="badge badge-muted">خارج المسار</span></div>
+          <div class="muted-text">عائلتك غير مدرجة في هذا المسار الفئوي لعدم وجود أبناء في سن التعليم (5 - 18 سنة) في بيانات العائلة.</div>
+        </div>
+      `;
+    }
+
+    const qA = getTrackActiveQueue(t.id, "A");
+    const qB = getTrackActiveQueue(t.id, "B");
+    const posA = qA.orderedQueue.findIndex(x => x.id === fam.id);
+    const posB = qB.orderedQueue.findIndex(x => x.id === fam.id);
+
+    let statusTextA = "";
+    if (posA === -1) {
+      statusTextA = "في الطابور العام (الأولوية حالياً للعائلات المسجل لديها تلف أو نقص حرج في هذا الأصل)";
+    } else if (posA === 0) {
+      statusTextA = "عائلتك هي الأولى على رأس الدور القادم!";
+    } else {
+      statusTextA = `أمامك ${posA} عائلة في الطابور`;
+    }
+
+    let statusTextB = "";
+    if (posB === -1) {
+      statusTextB = "في الطابور العام بعد استيفاء حالات النقص الحرج";
+    } else if (posB === 0) {
+      statusTextB = "عائلتك هي الأولى على رأس الدور القادم!";
+    } else {
+      statusTextB = `أمامك ${posB} عائلة في الطابور`;
+    }
+
+    let extraNote = "";
+    if (t.id === "wash") {
+      extraNote = `<div class="muted-text" style="margin-top:4px;">• حالة أوعية تخزين المياه: <strong>${fam.needWaterVessel ? 'مدرجة في أولوية الاحتياج' : 'مكتفية'}</strong></div>`;
+    }
+
     return `
       <div class="item-box">
-        <div class="item-header">${t.name}</div>
+        <div class="item-header"><span>${t.name}</span><span class="badge badge-teal">مشمولة بالمسار</span></div>
         <div style="font-size:0.85rem;">
-          • الرتبة الرئيسية (أ): <strong>${aheadA === 0 ? 'أنت الأول على رأس الدور القادم!' : `أمامك ${aheadA} خيمة في الطابور`}</strong><br>
-          • الرتبة التكميلية (ب): <strong>${aheadB === 0 ? 'أنت الأول على رأس الدور القادم!' : `أمامك ${aheadB} خيمة في الطابور`}</strong>
+          • الرتبة الرئيسية (أ): <strong>${statusTextA}</strong><br>
+          • الرتبة التكميلية (ب): <strong>${statusTextB}</strong>
+          ${extraNote}
         </div>
       </div>
     `;
   }).join("");
 
-  // سجل الاستلام الشخصي
+  // سجل الاستلام الشخصي للعائلة
   const hBox = document.getElementById("famHistoryBox");
   if (!fam.history || fam.history.length === 0) {
-    hBox.innerHTML = `<div class="muted-text">لم يتم تسجيل أي استلامات سابقة لهذه الخيمة حتى الآن.</div>`;
+    hBox.innerHTML = `<div class="muted-text">لم يتم تسجيل أي استلامات سابقة لهذه العائلة حتى الآن.</div>`;
   } else {
     hBox.innerHTML = fam.history.map(h => `
       <div class="item-box">
@@ -1232,10 +1440,10 @@ function changeFamilyPin() {
   const fam = appState.families.find(f => f.id === currentFamilyId);
   if (!fam) return;
   fam.pinHash = hashPin(newPin);
-  fam.plainPinForManager = "تم تغييره بواسطة الأسرة";
-  saveLocalState();
+  fam.plainPinForManager = "تم تغييره بواسطة العائلة";
+  saveLocalState(true);
   document.getElementById("famNewPin").value = "";
-  alert("تم تغيير الكود السري لخيمتك بنجاح.");
+  alert("تم تغيير الكود السري لعائلتك بنجاح.");
 }
 
 /* ==================== 3. منطق بوابة مسؤولي المخيم ==================== */
@@ -1251,7 +1459,6 @@ function loginManager() {
   document.getElementById("mgrLoginPin").value = "";
   document.getElementById("managerLoginCard").classList.add("hidden");
 
-  // فحص إجباري إذا كان الكود لا يزال 1234
   if (mgr.mustChangePin || pin === "1234") {
     document.getElementById("managerForcePinCard").classList.remove("hidden");
   } else {
@@ -1267,7 +1474,7 @@ function completeManagerForcePin() {
   }
   currentManager.pinHash = hashPin(newPin);
   currentManager.mustChangePin = false;
-  saveLocalState();
+  saveLocalState(true);
   document.getElementById("mgrForceNewPin").value = "";
   document.getElementById("managerForcePinCard").classList.add("hidden");
   openManagerDashboard();
@@ -1277,7 +1484,7 @@ function openManagerDashboard() {
   document.getElementById("managerDashboard").classList.remove("hidden");
   document.getElementById("mgrCurrentName").textContent = currentManager.name;
   document.getElementById("firebaseUrlInput").value = getFirebaseUrl();
-  calcPreviewScore();
+  handleGuardianStatusChange();
   refreshAllViews();
 }
 
@@ -1301,6 +1508,18 @@ function switchMgrTab(tab) {
   });
   if (tab === "distribute") previewDistributionBatch();
   if (tab === "audit") renderAuditLog();
+}
+
+function handleGuardianStatusChange() {
+  const gVal = Number(document.getElementById("fGuardianStatus").value) || 0;
+  const orphanInput = document.getElementById("fSponsoredOrphans");
+  if (gVal === 30) {
+    orphanInput.value = "0";
+    orphanInput.disabled = true;
+  } else {
+    orphanInput.disabled = false;
+  }
+  calcPreviewScore();
 }
 
 function calcPreviewScore() {
@@ -1327,29 +1546,31 @@ function saveFamily() {
   const reason = document.getElementById("fActionReason").value.trim();
 
   if (!tentNum || !headName) {
-    alert("يرجى إدخال رقم الخيمة واسم رب الأسرة.");
+    alert("يرجى إدخال رقم العائلة واسم رب الأسرة.");
     return;
   }
   if (!reason) {
-    alert("حقل السبب والمستند المعتمد إلزامي لتوثيق الحركة في السجل الرقابي.");
+    alert("حقل المستند المعتمد / سبب الإجراء إلزامي لتوثيق الحركة في السجل الرقابي.");
     return;
   }
 
-  const duplicateTent = appState.families.find(f => String(f.tentNum) === String(tentNum) && f.id !== editId);
-  if (duplicateTent) {
-    alert(`رقم الخيمة (${tentNum}) مسجل بالفعل باسم (${duplicateTent.headName}). يرجى التأكد من رقم الخيمة.`);
+  const duplicateFam = appState.families.find(f => String(f.tentNum) === String(tentNum) && f.id !== editId);
+  if (duplicateFam) {
+    alert(`رقم العائلة (${tentNum}) مسجل بالفعل باسم (${duplicateFam.headName}). يرجى التأكد من رقم العائلة.`);
     return;
   }
 
+  const gStatus = Number(document.getElementById("fGuardianStatus").value) || 0;
   const formData = {
     tentNum: Number(tentNum),
     headName,
-    guardianStatus: Number(document.getElementById("fGuardianStatus").value) || 0,
-    sponsoredOrphans: Number(document.getElementById("fSponsoredOrphans").value) || 0,
+    guardianStatus: gStatus,
+    sponsoredOrphans: gStatus === 30 ? 0 : (Number(document.getElementById("fSponsoredOrphans").value) || 0),
     healthTier1: Number(document.getElementById("fHealthTier1").value) || 0,
     healthTier2: Number(document.getElementById("fHealthTier2").value) || 0,
     healthTier3: Number(document.getElementById("fHealthTier3").value) || 0,
     membersCount: Math.max(1, Number(document.getElementById("fMembersCount").value) || 1),
+    schoolAgeCount: Math.max(0, Number(document.getElementById("fSchoolAgeCount").value) || 0),
     sensHigh: Number(document.getElementById("fSensHigh").value) || 0,
     sensMed: Number(document.getElementById("fSensMed").value) || 0,
     needShelter: document.getElementById("fNeedShelter").checked,
@@ -1364,12 +1585,17 @@ function saveFamily() {
     const idx = appState.families.findIndex(f => f.id === editId);
     if (idx === -1) return;
     const oldFam = appState.families[idx];
-    const beforeSummary = `خيمة (${oldFam.tentNum}) - ${oldFam.headName} | النقاط: ${oldFam.metrics.totalScore} (معيل:${oldFam.metrics.sector1}، صحة:${oldFam.metrics.sector2}، أفراد:${oldFam.membersCount}، حساسة:${oldFam.metrics.sector4})`;
-    const afterSummary = `خيمة (${formData.tentNum}) - ${formData.headName} | النقاط: ${metrics.totalScore} (معيل:${metrics.sector1}، صحة:${metrics.sector2}، أفراد:${formData.membersCount}، حساسة:${metrics.sector4})`;
+
+    if (!confirm(`تأكيد تعديل بيانات عائلة رقم (${formData.tentNum}) — ${formData.headName}:\n• النقاط قبل التعديل: ${oldFam.metrics.totalScore}\n• النقاط بعد التعديل: ${metrics.totalScore}\n\nهل تريد اعتماد التعديل وتوثيقه في السجل الرقابي؟`)) {
+      return;
+    }
+
+    const beforeSummary = `عائلة (${oldFam.tentNum}) - ${oldFam.headName} | النقاط: ${oldFam.metrics.totalScore} (معيل:${oldFam.metrics.sector1}، صحة:${oldFam.metrics.sector2}، أفراد:${oldFam.membersCount}، حساسة:${oldFam.metrics.sector4})`;
+    const afterSummary = `عائلة (${formData.tentNum}) - ${formData.headName} | النقاط: ${metrics.totalScore} (معيل:${metrics.sector1}، صحة:${metrics.sector2}، أفراد:${formData.membersCount}، حساسة:${metrics.sector4})`;
 
     appState.families[idx] = Object.assign({}, oldFam, formData, { metrics });
     addAuditLog(currentManager.name, "MANAGER", "FAMILY_EDIT", formData.tentNum, beforeSummary, afterSummary, reason);
-    alert(`تم تحديث بيانات خيمة رقم (${formData.tentNum}) وتوثيق التعديل في السجل.`);
+    alert(`تم تحديث بيانات عائلة رقم (${formData.tentNum}) وتوثيق التعديل في السجل.`);
   } else {
     const existingPins = appState.families.map(f => f.plainPinForManager).filter(Boolean);
     const randomPin = generateRandom4DigitPin(existingPins);
@@ -1382,13 +1608,13 @@ function saveFamily() {
     }, formData, { metrics });
 
     appState.families.push(newFam);
-    const afterSummary = `إضافة خيمة (${formData.tentNum}) - ${formData.headName} | النقاط: ${metrics.totalScore} | الشريحة: ${metrics.foodTierLabel}`;
-    addAuditLog(currentManager.name, "MANAGER", "FAMILY_ADD", formData.tentNum, "غير موجود", afterSummary, reason);
-    alert(`تمت إضافة خيمة رقم (${formData.tentNum}) بنجاح.\nالكود السري العشوائي المولد لهذه العائلة هو: [ ${randomPin} ]\nيرجى إبلاغ رب الأسرة به.`);
+    const afterSummary = `إضافة عائلة (${formData.tentNum}) - ${formData.headName} | النقاط: ${metrics.totalScore} | الشريحة: ${metrics.foodTierLabel}`;
+    addAuditLog(currentManager.name, "MANAGER", "FAMILY_ADD", formData.tentNum, "غير مسجلة سابقاً", afterSummary, reason);
+    alert(`تمت إضافة عائلة رقم (${formData.tentNum}) بنجاح.\nالكود السري العشوائي المولد لهذه العائلة هو: [ ${randomPin} ]\nيرجى إبلاغ رب الأسرة به.`);
   }
 
   resetFamilyForm();
-  saveLocalState();
+  saveLocalState(true);
   refreshAllViews();
 }
 
@@ -1400,10 +1626,12 @@ function resetFamilyForm() {
   document.getElementById("fHeadName").value = "";
   document.getElementById("fGuardianStatus").value = "0";
   document.getElementById("fSponsoredOrphans").value = "0";
+  document.getElementById("fSponsoredOrphans").disabled = false;
   document.getElementById("fHealthTier1").value = "0";
   document.getElementById("fHealthTier2").value = "0";
   document.getElementById("fHealthTier3").value = "0";
   document.getElementById("fMembersCount").value = "1";
+  document.getElementById("fSchoolAgeCount").value = "0";
   document.getElementById("fSensHigh").value = "0";
   document.getElementById("fSensMed").value = "0";
   document.getElementById("fNeedShelter").checked = false;
@@ -1419,52 +1647,53 @@ function startEditFamily(famId) {
   const fam = appState.families.find(f => f.id === famId);
   if (!fam) return;
   document.getElementById("editFamInternalId").value = fam.id;
-  document.getElementById("famFormTitle").textContent = `تعديل بيانات خيمة رقم (${fam.tentNum}) — ${fam.headName}`;
+  document.getElementById("famFormTitle").textContent = `تعديل بيانات عائلة رقم (${fam.tentNum}) — ${fam.headName}`;
   document.getElementById("cancelEditFamBtn").classList.remove("hidden");
   document.getElementById("fTentNum").value = fam.tentNum;
   document.getElementById("fHeadName").value = fam.headName;
   document.getElementById("fGuardianStatus").value = String(fam.guardianStatus);
-  document.getElementById("fSponsoredOrphans").value = fam.sponsoredOrphans;
-  document.getElementById("fHealthTier1").value = fam.healthTier1;
-  document.getElementById("fHealthTier2").value = fam.healthTier2;
-  document.getElementById("fHealthTier3").value = fam.healthTier3;
-  document.getElementById("fMembersCount").value = fam.membersCount;
-  document.getElementById("fSensHigh").value = fam.sensHigh;
-  document.getElementById("fSensMed").value = fam.sensMed;
+  document.getElementById("fSponsoredOrphans").value = fam.sponsoredOrphans || 0;
+  document.getElementById("fHealthTier1").value = fam.healthTier1 || 0;
+  document.getElementById("fHealthTier2").value = fam.healthTier2 || 0;
+  document.getElementById("fHealthTier3").value = fam.healthTier3 || 0;
+  document.getElementById("fMembersCount").value = fam.membersCount || 1;
+  document.getElementById("fSchoolAgeCount").value = fam.schoolAgeCount || 0;
+  document.getElementById("fSensHigh").value = fam.sensHigh || 0;
+  document.getElementById("fSensMed").value = fam.sensMed || 0;
   document.getElementById("fNeedShelter").checked = !!fam.needShelter;
   document.getElementById("fNeedLight").checked = !!fam.needLight;
   document.getElementById("fNeedWaterVessel").checked = !!fam.needWaterVessel;
   document.getElementById("fNeedBedding").checked = !!fam.needBedding;
   document.getElementById("fIsCommittee").checked = !!fam.isCommittee;
   document.getElementById("fActionReason").value = "";
-  calcPreviewScore();
+  handleGuardianStatusChange();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function resetFamilyPinByManager(famId) {
   const fam = appState.families.find(f => f.id === famId);
   if (!fam) return;
-  const reason = prompt(`أدخل سبب إعادة توليد كود سري جديد لخيمة رقم (${fam.tentNum}) - ${fam.headName}:`, "نسيان الكود السري بطلب من رب الأسرة");
+  const reason = prompt(`أدخل سبب إعادة توليد كود سري جديد لعائلة رقم (${fam.tentNum}) - ${fam.headName}:`, "نسيان الكود السري بطلب من رب الأسرة");
   if (!reason) return;
   const existingPins = appState.families.map(f => f.plainPinForManager).filter(Boolean);
   const newPin = generateRandom4DigitPin(existingPins);
   fam.pinHash = hashPin(newPin);
   fam.plainPinForManager = newPin;
   addAuditLog(currentManager.name, "MANAGER", "PIN_RESET", fam.tentNum, "كود سابق مشفر", `تم توليد كود عشوائي جديد من 4 أرقام`, reason.trim());
-  saveLocalState();
+  saveLocalState(true);
   renderManagerFamilies();
-  alert(`تم توليد كود سري جديد لخيمة رقم (${fam.tentNum}):\nالكود الجديد هو: [ ${newPin} ]`);
+  alert(`تم توليد كود سري جديد لعائلة رقم (${fam.tentNum}):\nالكود الجديد هو: [ ${newPin} ]`);
 }
 
 function deleteFamilyByManager(famId) {
   const fam = appState.families.find(f => f.id === famId);
   if (!fam) return;
-  const reason = prompt(`تحذير: أنت على وشك حذف خيمة رقم (${fam.tentNum}) - ${fam.headName}.\nأدخل سبب الحذف لتوثيقه في السجل الرقابي:`);
+  const reason = prompt(`تحذير: أنت على وشك حذف عائلة رقم (${fam.tentNum}) - ${fam.headName}.\nأدخل سبب الحذف والمستند لتوثيقه في السجل الرقابي:`);
   if (!reason || !reason.trim()) return;
-  const beforeSummary = `خيمة (${fam.tentNum}) - ${fam.headName} | النقاط: ${fam.metrics.totalScore} | الأفراد: ${fam.membersCount}`;
+  const beforeSummary = `عائلة (${fam.tentNum}) - ${fam.headName} | النقاط: ${fam.metrics.totalScore} | الأفراد: ${fam.membersCount}`;
   appState.families = appState.families.filter(f => f.id !== famId);
-  addAuditLog(currentManager.name, "MANAGER", "FAMILY_DELETE", fam.tentNum, beforeSummary, "تم حذف الخيمة من السجل", reason.trim());
-  saveLocalState();
+  addAuditLog(currentManager.name, "MANAGER", "FAMILY_DELETE", fam.tentNum, beforeSummary, "تم حذف العائلة من السجل", reason.trim());
+  saveLocalState(true);
   refreshAllViews();
 }
 
@@ -1490,8 +1719,8 @@ function renderManagerFamilies() {
         <div class="item-header">
           <div>
             <span class="badge badge-primary">ترتيب #${globalRank}</span>
-            <strong style="margin-right:6px;">خيمة (${f.tentNum}) — ${f.headName}</strong>
-            ${f.isCommittee ? `<span class="badge badge-danger" style="margin-right:6px;">خيمة عضو لجنة</span>` : ""}
+            <strong style="margin-right:6px;">عائلة (${f.tentNum}) — ${f.headName}</strong>
+            ${f.isCommittee ? `<span class="badge badge-danger" style="margin-right:6px;">عائلة عضو لجنة</span>` : ""}
           </div>
           <div>
             <span class="badge badge-teal">النقاط: ${f.metrics.totalScore} / 100</span>
@@ -1499,12 +1728,12 @@ function renderManagerFamilies() {
           </div>
         </div>
         <div style="font-size:0.84rem; margin-bottom:8px;">
-          • الأفراد: <strong>${f.membersCount}</strong> | تفصيل النقاط: (المعيل: ${f.metrics.sector1} ، الصحة: ${f.metrics.sector2} ، الحجم: ${f.metrics.sector3} ، الحساسة: ${f.metrics.sector4})<br>
-          • الكود السري للخيمة: <span class="pin-display">${f.plainPinForManager || "مُغيّر"}</span> | استلامات هذا الأسبوع: <strong>${f.weeklyCount || 0}</strong>
+          • الأفراد: <strong>${f.membersCount}</strong> (أبناء سن التعليم: ${f.schoolAgeCount || 0}) | تفصيل النقاط: (المعيل: ${f.metrics.sector1} ، الصحة: ${f.metrics.sector2} ، الحجم: ${f.metrics.sector3} ، الحساسة: ${f.metrics.sector4})<br>
+          • الكود السري للعائلة: <span class="pin-display">${f.plainPinForManager || "مُغيّر"}</span> | استلامات هذا الأسبوع: <strong>${f.weeklyCount || 0}</strong>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
           <button class="btn btn-outline btn-sm" onclick="startEditFamily('${f.id}')">تعديل البيانات والنقاط</button>
-          <button class="btn btn-warning btn-sm" onclick="resetFamilyPinByManager('${f.id}')">توليد كود سري جديد للخيمة</button>
+          <button class="btn btn-warning btn-sm" onclick="resetFamilyPinByManager('${f.id}')">توليد كود سري جديد للعائلة</button>
           <button class="btn btn-danger btn-sm" onclick="deleteFamilyByManager('${f.id}')">حذف العائلة</button>
         </div>
       </div>
@@ -1512,116 +1741,178 @@ function renderManagerFamilies() {
   }).join("");
 }
 
-/* ==================== منطق التوزيع الذكي والتفويج بالدفعات ==================== */
-function checkFamilyMatchesFilter(fam, filterMode) {
-  if (filterMode === "general") return true;
-  if (filterMode === "need_shelter") return !!fam.needShelter;
-  if (filterMode === "need_light") return !!fam.needLight;
-  if (filterMode === "need_water") return !!fam.needWaterVessel;
-  if (filterMode === "need_bedding") return !!fam.needBedding;
-  if (filterMode === "target_infant") return (Number(fam.sensHigh) || 0) > 0;
-  if (filterMode === "target_health") return (Number(fam.healthTier1) || 0) > 0 || (Number(fam.healthTier2) || 0) > 0;
-  return true;
+/* ==================== منطق التوزيع الذكي واستكمال الفائض من الطابور العام ==================== */
+function handleTrackSelectionChange() {
+  const trackId = document.getElementById("distTrack").value;
+  const trackObj = TRACKS.find(t => t.id === trackId);
+  if (trackObj) {
+    document.getElementById("distFilterMode").value = trackObj.defaultFilter;
+    document.getElementById("distUseTiers").value = trackObj.defaultTiers;
+  }
+  previewDistributionBatch();
 }
 
 function computeDistributionBatch() {
   const sorted = getSortedFamilies();
   const trackId = document.getElementById("distTrack").value;
-  const rank = document.getElementById("distRank").value; // "A" or "B"
+  const rank = document.getElementById("distRank").value;
   const availableQty = Math.max(0, Number(document.getElementById("distQty").value) || 0);
   const filterMode = document.getElementById("distFilterMode").value;
   const useTiers = document.getElementById("distUseTiers").value === "yes";
   const enforceWeeklyCap = document.getElementById("distEnforceWeeklyCap").checked;
 
   if (sorted.length === 0 || availableQty <= 0) {
-    return { selected: [], deferredWeekly: [], startIdx: 0, newMarker: 0, cycleCompleted: false, remainingQty: availableQty };
+    return { selected: [], deferredWeekly: [], remainingQty: availableQty };
   }
 
-  const mObj = appState.markers[trackId] || { A: 0, B: 0, cycleA: 1, cycleB: 1 };
-  const startIdx = (rank === "A" ? mObj.A : mObj.B) % sorted.length;
+  const mObj = appState.markers[trackId] || { servedA: [], servedB: [], cycleA: 1, cycleB: 1 };
+  const servedList = rank === "A" ? (mObj.servedA || []) : (mObj.servedB || []);
+
+  // ترتيب أي مجموعة عائلات بحيث يبدأ بمن لم يستلم في الدورة الحالية ثم من استلم
+  function orderPoolByCycle(pool) {
+    const unserved = pool.filter(f => !servedList.includes(f.id));
+    const served = pool.filter(f => servedList.includes(f.id));
+    return [...unserved, ...served];
+  }
+
+  let primaryPool = [];
+  let allowGeneralOverflow = false;
+
+  if (filterMode === "general") {
+    primaryPool = sorted;
+  } else if (filterMode === "target_infant") {
+    primaryPool = sorted.filter(f => (Number(f.sensHigh) || 0) > 0);
+  } else if (filterMode === "target_health") {
+    primaryPool = sorted.filter(f => ((Number(f.healthTier1) || 0) + (Number(f.healthTier2) || 0) + (Number(f.healthTier3) || 0)) > 0);
+  } else if (filterMode === "target_edu") {
+    primaryPool = sorted.filter(f => (Number(f.schoolAgeCount) || 0) > 0);
+  } else if (filterMode === "need_shelter") {
+    primaryPool = sorted.filter(f => !!f.needShelter);
+    allowGeneralOverflow = true;
+  } else if (filterMode === "need_light") {
+    primaryPool = sorted.filter(f => !!f.needLight);
+    allowGeneralOverflow = true;
+  } else if (filterMode === "need_water") {
+    primaryPool = sorted.filter(f => !!f.needWaterVessel);
+    allowGeneralOverflow = true;
+  } else if (filterMode === "need_bedding") {
+    primaryPool = sorted.filter(f => !!f.needBedding);
+    allowGeneralOverflow = true;
+  }
 
   let remQty = availableQty;
   const selected = [];
+  const selectedIds = new Set();
   const deferredWeekly = [];
-  let steps = 0;
-  let pointer = startIdx;
-  let cycleCompleted = false;
 
-  while (steps < sorted.length && remQty > 0) {
-    const candidate = sorted[pointer];
-    if (checkFamilyMatchesFilter(candidate, filterMode)) {
-      if (enforceWeeklyCap && (candidate.weeklyCount || 0) >= 2) {
-        deferredWeekly.push(candidate);
-      } else {
-        const neededShares = useTiers ? candidate.metrics.foodShares : 1;
-        const allocated = remQty >= neededShares ? neededShares : remQty;
-        selected.push({
-          family: candidate,
-          globalRank: pointer + 1,
-          allocatedQty: allocated
-        });
-        remQty = Number((remQty - allocated).toFixed(2));
-      }
+  // المرحلة الأولى: التخصيص للفئة المستهدفة أو ذات الاحتياج الفعلي المسجل
+  const orderedPrimary = orderPoolByCycle(primaryPool);
+  for (const candidate of orderedPrimary) {
+    if (remQty <= 0) break;
+    if (enforceWeeklyCap && (candidate.weeklyCount || 0) >= 2) {
+      deferredWeekly.push(candidate);
+      continue;
     }
-    pointer = (pointer + 1) % sorted.length;
-    steps++;
-    if (pointer === 0 && selected.length > 0) {
-      cycleCompleted = true;
+    const neededShares = useTiers ? candidate.metrics.foodShares : 1;
+    const allocated = remQty >= neededShares ? neededShares : remQty;
+    const globalRank = sorted.findIndex(x => x.id === candidate.id) + 1;
+    selected.push({
+      family: candidate,
+      globalRank,
+      allocatedQty: allocated,
+      reasonTag: allowGeneralOverflow ? "استحقاق احتياج فعلي" : "استحقاق حسب الدور"
+    });
+    selectedIds.add(candidate.id);
+    remQty = Number((remQty - allocated).toFixed(2));
+  }
+
+  // المرحلة الثانية: إذا كان هناك فائض في شحنة الأصول، يتم استكمال التوزيع تلقائياً من الطابور العام
+  if (remQty > 0 && allowGeneralOverflow) {
+    const overflowPool = sorted.filter(f => !selectedIds.has(f.id));
+    const orderedOverflow = orderPoolByCycle(overflowPool);
+    for (const candidate of orderedOverflow) {
+      if (remQty <= 0) break;
+      if (enforceWeeklyCap && (candidate.weeklyCount || 0) >= 2) {
+        if (!deferredWeekly.some(d => d.id === candidate.id)) deferredWeekly.push(candidate);
+        continue;
+      }
+      const neededShares = useTiers ? candidate.metrics.foodShares : 1;
+      const allocated = remQty >= neededShares ? neededShares : remQty;
+      const globalRank = sorted.findIndex(x => x.id === candidate.id) + 1;
+      selected.push({
+        family: candidate,
+        globalRank,
+        allocatedQty: allocated,
+        reasonTag: "استكمال الفائض حسب الطابور العام"
+      });
+      selectedIds.add(candidate.id);
+      remQty = Number((remQty - allocated).toFixed(2));
     }
   }
 
   return {
     selected,
     deferredWeekly,
-    startIdx,
-    newMarker: pointer,
-    cycleCompleted,
     remainingQty: remQty
   };
 }
 
 function previewDistributionBatch() {
-  const sorted = getSortedFamilies();
   const trackId = document.getElementById("distTrack").value;
   const rank = document.getElementById("distRank").value;
-  const mObj = appState.markers[trackId] || { A: 0, B: 0, cycleA: 1, cycleB: 1 };
-  const startIdx = sorted.length > 0 ? ((rank === "A" ? mObj.A : mObj.B) % sorted.length) : 0;
+  const qInfo = getTrackActiveQueue(trackId, rank);
 
   const badge = document.getElementById("distMarkerInfoBadge");
-  badge.textContent = sorted.length > 0
-    ? `مؤشر البدء الحالي: الترتيب #${startIdx + 1} (خيمة ${sorted[startIdx].tentNum})`
-    : "لا توجد عائلات مسجلة";
+  if (qInfo.orderedQueue.length > 0) {
+    badge.textContent = `دورة (${qInfo.cycle}) — الدور يبدأ من: عائلة رقم (${qInfo.orderedQueue[0].tentNum})`;
+  } else {
+    badge.textContent = "لا توجد عائلات مؤهلة حالياً";
+  }
 
   const res = computeDistributionBatch();
   const listEl = document.getElementById("distPreviewList");
 
   if (res.selected.length === 0) {
-    listEl.innerHTML = `<div class="muted-text">لا توجد خيام مطابقة لشروط الفرز الحالية أو الكمية تساوي صفراً.</div>`;
+    listEl.innerHTML = `<div class="muted-text">لا توجد عائلات مطابقة لشروط الفرز الحالية أو الكمية تساوي صفراً.</div>`;
     return;
   }
 
-  // فحص بند نزاهة اللجنة (المادة 6)
   const committeeIncluded = res.selected.filter(x => x.family.isCommittee);
+  const overflowCount = res.selected.filter(x => x.reasonTag.includes("الفائض")).length;
   let html = "";
+
   if (committeeIncluded.length > 0) {
     html += `
       <div class="alert-banner alert-danger">
-        <strong>تنبيه المادة (6) - نزاهة اللجنة:</strong> تضم هذه الدفعة خيمة عضو لجنة إدارة (${committeeIncluded.map(c => `خيمة ${c.family.tentNum}`).join("، ")}). يُحظر أن يصرف عضو اللجنة حصته بيده، ويجب تسليمها عبر الشاهد المحايد في آخر الكشف.
+        <strong>تنبيه المادة (6) - نزاهة اللجنة:</strong> تضم هذه الدفعة عائلة عضو لجنة إدارة (${committeeIncluded.map(c => `عائلة ${c.family.tentNum}`).join("، ")}). يُحظر أن يصرف عضو اللجنة حصته بيده، ويجب تسليمها عبر الشاهد المحايد في آخر الكشف.
+      </div>
+    `;
+  }
+  if (overflowCount > 0) {
+    html += `
+      <div class="alert-banner alert-info">
+        <strong>تطبيق استكمال الفائض:</strong> الكمية المتوفرة زادت عن عدد العائلات المسجل لديها نقص حرج، فتم تخصيص (${res.selected.length - overflowCount}) للاحتياج الفعلي، وتمرير الفائض لـ (${overflowCount}) عائلة حسب الطابور العام.
       </div>
     `;
   }
   if (res.deferredWeekly.length > 0) {
     html += `
       <div class="alert-banner alert-warn">
-        تم تأجيل (${res.deferredWeekly.length}) خيمة في هذه الدفعة لتجاوزها سقف الاستلام الأسبوعي (مساعدتين في أسبوع واحد): ${res.deferredWeekly.map(d => `خيمة (${d.tentNum})`).join(" ، ")}.
+        تم تأجيل (${res.deferredWeekly.length}) عائلة في هذه الدفعة لتجاوزها سقف الاستلام الأسبوعي (مساعدتين في أسبوع واحد): ${res.deferredWeekly.map(d => `عائلة (${d.tentNum})`).join(" ، ")}.
       </div>
     `;
   }
 
   html += res.selected.map(item => `
-    <div style="padding:6px 0; border-bottom:1px solid var(--border); font-size:0.88rem; display:flex; justify-content:space-between;">
-      <span><strong>الترتيب #${item.globalRank}:</strong> خيمة رقم (${item.family.tentNum}) — ${item.family.headName} ${item.family.isCommittee ? '<span class="badge badge-danger">عضو لجنة</span>' : ''}</span>
-      <span class="badge badge-success">الكمية المقررة: ${item.allocatedQty}</span>
+    <div style="padding:7px 0; border-bottom:1px solid var(--border); font-size:0.88rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+      <span>
+        <strong>الترتيب العام #${item.globalRank}:</strong> عائلة رقم (${item.family.tentNum}) — ${item.family.headName}
+        ${item.family.isCommittee ? '<span class="badge badge-danger">عضو لجنة</span>' : ''}
+      </span>
+      <span style="display:flex; gap:6px; align-items:center;">
+        <span class="badge ${item.reasonTag.includes('الفائض') ? 'badge-warning' : 'badge-primary'}">${item.reasonTag}</span>
+        <span class="badge badge-success">الكمية المقررة: ${item.allocatedQty}</span>
+      </span>
     </div>
   `).join("");
 
@@ -1655,15 +1946,18 @@ function confirmDistribution() {
 
   const dtNow = formatCampDateTime();
   const mObj = appState.markers[trackId];
-  const oldMarkerVal = rank === "A" ? mObj.A : mObj.B;
+  const servedKey = rank === "A" ? "servedA" : "servedB";
+  const cycleKey = rank === "A" ? "cycleA" : "cycleB";
+  if (!Array.isArray(mObj[servedKey])) mObj[servedKey] = [];
+
   let totalDistributed = 0;
-  const tentsServed = [];
+  const familiesServedNums = [];
 
   batch.selected.forEach(item => {
     const fam = appState.families.find(f => f.id === item.family.id);
     if (!fam) return;
     totalDistributed = Number((totalDistributed + item.allocatedQty).toFixed(2));
-    tentsServed.push(fam.tentNum);
+    familiesServedNums.push(fam.tentNum);
     fam.weeklyCount = (fam.weeklyCount || 0) + 1;
     if (!fam.history) fam.history = [];
     fam.history.unshift({
@@ -1677,7 +1971,11 @@ function confirmDistribution() {
       managerName: currentManager.name
     });
 
-    // إذا كان التوزيع في أصل مستدام (شادر / كشاف / خزان / فرشات) ومن الرتبة الرئيسية (أ)، يتم تحديث حالة الاكتفاء تلقائياً
+    if (!mObj[servedKey].includes(fam.id)) {
+      mObj[servedKey].push(fam.id);
+    }
+
+    // تحديث حالة الاكتفاء للأصول المستدامة عند استلام رتبة رئيسية (أ)
     if (rank === "A") {
       if (filterMode === "need_shelter") fam.needShelter = false;
       if (filterMode === "need_light") fam.needLight = false;
@@ -1686,16 +1984,16 @@ function confirmDistribution() {
     }
   });
 
-  // تحريك مؤشر التوقف
-  if (rank === "A") {
-    mObj.A = batch.newMarker;
-    if (batch.cycleCompleted) mObj.cycleA = (mObj.cycleA || 1) + 1;
-  } else {
-    mObj.B = batch.newMarker;
-    if (batch.cycleCompleted) mObj.cycleB = (mObj.cycleB || 1) + 1;
+  // فحص اكتمال الدورة لجميع المؤهلين في هذا المسار
+  const currentEligible = getSortedFamilies().filter(f => isFamilyEligibleForTrack(f, trackId));
+  if (currentEligible.length > 0 && currentEligible.every(f => mObj[servedKey].includes(f.id))) {
+    mObj[servedKey] = [];
+    mObj[cycleKey] = (Number(mObj[cycleKey]) || 1) + 1;
   }
 
-  // إضافة إعلان في لوحة الشفافية العامة
+  const nextQueueInfo = getTrackActiveQueue(trackId, rank);
+  const nextFamAfter = nextQueueInfo.orderedQueue.length > 0 ? `عائلة (${nextQueueInfo.orderedQueue[0].tentNum})` : "بداية الدورة";
+
   appState.announcements.unshift({
     id: "ANN_" + Date.now(),
     dateTime: dtNow,
@@ -1703,36 +2001,35 @@ function confirmDistribution() {
     rank,
     itemName,
     totalQtyDistributed: totalDistributed,
-    tentsServed,
+    tentsServed: familiesServedNums,
     witness,
     managerName: currentManager.name,
     notes
   });
 
-  // توثيق في سجل الحركات الرقابي
-  const beforeStr = `مؤشر ${trackObj.name} (رتبة ${rank}) عند الموضع #${oldMarkerVal + 1}`;
-  const afterStr = `توزيع [${itemName}] بكمية (${totalDistributed}) على ${tentsServed.length} خيمة: [${tentsServed.join("، ")}] — انتقل المؤشر للموضع #${batch.newMarker + 1}`;
-  addAuditLog(currentManager.name, "MANAGER", "DISTRIBUTION", tentsServed.join(","), beforeStr, afterStr, notes || "توزيع وفق الدور المعلن", witness);
+  const beforeStr = `توزيع في ${trackObj.name} (رتبة ${rank === 'A' ? 'أ' : 'ب'})`;
+  const afterStr = `صرف [${itemName}] بكمية إجمالية (${totalDistributed}) لعدد (${familiesServedNums.length}) عائلة: [${familiesServedNums.join("، ")}] — الدور القادم يبدأ من: ${nextFamAfter}`;
+  addAuditLog(currentManager.name, "MANAGER", "DISTRIBUTION", familiesServedNums.join("، "), beforeStr, afterStr, notes || "توزيع وفق الدور المعلن", witness);
 
   document.getElementById("distItemName").value = "";
   document.getElementById("distNotes").value = "";
-  saveLocalState();
+  saveLocalState(true);
   refreshAllViews();
-  alert(`تم اعتماد التوزيع بنجاح لعدد (${tentsServed.length}) خيمة، وتحرك مؤشر الدور تلقائياً، وتم نشر البيان في لوحة الشفافية العامة.`);
+  alert(`تم اعتماد التوزيع بنجاح لعدد (${familiesServedNums.length}) عائلة، وتحرك مؤشر الدور تلقائياً، وتم نشر البيان في لوحة الشفافية العامة.`);
 }
 
 function resetWeeklyCountersWithLog() {
   if (!currentManager) return;
-  const reason = prompt("أدخل سبب تصفير عداد الاستلام الأسبوعي لجميع الخيام (مثال: بداية أسبوع جديد):", "بداية أسبوع جديد");
+  const reason = prompt("أدخل سبب تصفير عداد الاستلام الأسبوعي لجميع العائلات (مثال: بداية أسبوع جديد):", "بداية أسبوع جديد");
   if (!reason) return;
   appState.families.forEach(f => { f.weeklyCount = 0; });
-  addAuditLog(currentManager.name, "MANAGER", "FAMILY_EDIT", "جميع الخيام", "عداد التكدس الأسبوعي السابق", "تم تصفير العداد الأسبوعي (0)", reason.trim());
-  saveLocalState();
+  addAuditLog(currentManager.name, "MANAGER", "WEEKLY_RESET", "جميع العائلات", "عداد التكدس الأسبوعي السابق", "تم تصفير العداد الأسبوعي إلى (0)", reason.trim());
+  saveLocalState(true);
   refreshAllViews();
-  alert("تم تصفير عداد الاستلام الأسبوعي لجميع الخيام.");
+  alert("تم تصفير عداد الاستلام الأسبوعي لجميع العائلات.");
 }
 
-/* ==================== منطق سجل الحركات الرقابي (Audit Log) ==================== */
+/* ==================== منطق سجل الحركات الرقابي (معرّب بالكامل) ==================== */
 function renderAuditLog() {
   const container = document.getElementById("auditLogList");
   const q = (document.getElementById("auditSearchText").value || "").trim().toLowerCase();
@@ -1742,7 +2039,8 @@ function renderAuditLog() {
     if (typeFilter === "SUPERVISOR" && log.actorRole !== "SUPERVISOR") return false;
     if (typeFilter !== "all" && typeFilter !== "SUPERVISOR" && log.actionType !== typeFilter) return false;
     if (!q) return true;
-    const hay = `${log.actorName} ${log.targetTent} ${log.beforeVal} ${log.afterVal} ${log.reason} ${log.witness}`.toLowerCase();
+    const arLabel = ACTION_LABELS_AR[log.actionType] || log.actionType;
+    const hay = `${arLabel} ${log.actorName} ${log.targetTent} ${log.beforeVal} ${log.afterVal} ${log.reason} ${log.witness}`.toLowerCase();
     return hay.includes(q);
   });
 
@@ -1753,22 +2051,24 @@ function renderAuditLog() {
 
   container.innerHTML = filtered.map(log => {
     const isSup = log.actorRole === "SUPERVISOR";
+    const arabicActionName = ACTION_LABELS_AR[log.actionType] || "إجراء إداري";
     return `
       <div class="item-box ${isSup ? 'highlight-red' : ''}">
         <div class="item-header">
           <span>
-            ${isSup ? `<span class="badge badge-danger">تنبيه نظام — حركة مشرف تقني</span>` : `<span class="badge badge-primary">${log.actionType}</span>`}
+            ${isSup ? `<span class="badge badge-danger">${arabicActionName}</span>` : `<span class="badge badge-primary">${arabicActionName}</span>`}
             <strong style="margin-right:6px;">المنفذ: ${log.actorName}</strong>
-            ${log.targetTent ? ` | الخيمة/الهدف: (${log.targetTent})` : ""}
+            ${log.targetTent ? ` | العائلة/الهدف: (${log.targetTent})` : ""}
           </span>
           <span style="font-size:0.84rem; color:var(--primary); font-weight:700;">${log.dateTimeFormatted}</span>
         </div>
         <div style="font-size:0.85rem; margin-bottom:4px;">
-          • <strong>القيمة قبل:</strong> ${log.beforeVal}<br>
-          • <strong>القيمة بعد:</strong> ${log.afterVal}
+          • <strong>الحالة قبل الإجراء:</strong> ${log.beforeVal}<br>
+          • <strong>الحالة بعد الإجراء:</strong> ${log.afterVal}
         </div>
         <div class="muted-text">
-          السبب الموثق: <strong>${log.reason}</strong> | الشاهد المحايد: <strong>${log.witness}</strong>
+          المستند / السبب الموثق: <strong>${log.reason}</strong>
+          ${log.witness && log.witness !== "—" ? ` | الشاهد المحايد: <strong>${log.witness}</strong>` : ""}
         </div>
       </div>
     `;
@@ -1796,7 +2096,7 @@ function importBackupFile() {
     return;
   }
   if (!reason) {
-    alert("يرجى كتابة سبب استعادة النسخة الاحتياطية لتوثيقه في السجل الرقابي.");
+    alert("يرجى كتابة سبب استعادة النسخة الاحتياطية واسم الشاهد لتوثيقه في السجل الرقابي.");
     return;
   }
   const reader = new FileReader();
@@ -1809,14 +2109,15 @@ function importBackupFile() {
       }
       const currentLogs = appState.auditLogs || [];
       appState = Object.assign(createInitialState(), imported);
-      // دمج السجل الرقابي لضمان عدم مسح أي تاريخ سابق
+      normalizeMarkersStructure(appState);
+
       const map = new Map();
       (appState.auditLogs || []).forEach(l => map.set(l.id, l));
       currentLogs.forEach(l => map.set(l.id, l));
       appState.auditLogs = Array.from(map.values()).sort((a, b) => b.timestampMs - a.timestampMs);
 
-      addAuditLog(currentManager.name, "MANAGER", "BACKUP_RESTORE", "النظام الكامل", "حالة سابقة", `استعادة نسخة تضم ${appState.families.length} عائلة`, reason);
-      saveLocalState();
+      addAuditLog(currentManager.name, "MANAGER", "BACKUP_RESTORE", "النظام الكامل", "حالة سابقة", `استعادة نسخة احتياطية تضم ${appState.families.length} عائلة`, reason);
+      saveLocalState(true);
       refreshAllViews();
       alert("تمت استعادة النسخة الاحتياطية بنجاح وتوثيق العملية في السجل الرقابي.");
     } catch (err) {
@@ -1834,12 +2135,12 @@ function changeManagerSelfPin() {
     return;
   }
   currentManager.pinHash = hashPin(newPin);
-  saveLocalState();
+  saveLocalState(true);
   document.getElementById("mgrNewSelfPin").value = "";
   alert("تم تحديث الكود السري الخاص بك بنجاح.");
 }
 
-/* ==================== 4. منطق بوابة المشرف التقني (مقلصة للحد الأدنى) ==================== */
+/* ==================== 4. منطق بوابة المشرف التقني ==================== */
 function loginSupervisor() {
   const pin = document.getElementById("supLoginPin").value.trim();
   if (hashPin(pin) !== appState.supervisorPinHash) {
@@ -1880,11 +2181,10 @@ function supervisorAddManager() {
     createdAt: formatCampDateTime()
   });
 
-  // توثيق فوري في سجل الحركات ليراه المسؤولون الثلاثة باللون الأحمر
   addAuditLog("المشرف التقني", "SUPERVISOR", "SUPERVISOR_ADD_MGR", username, "غير موجود", `إضافة حساب مسؤول جديد: ${name} (@${username}) بكود افتراضي 1234`, "إدارة حسابات المسؤولين");
   document.getElementById("supNewMgrName").value = "";
   document.getElementById("supNewMgrUser").value = "";
-  saveLocalState();
+  saveLocalState(true);
   renderSupervisorManagers();
   alert(`تمت إضافة المسؤول (${name}) بنجاح بكود افتراضي 1234.`);
 }
@@ -1898,7 +2198,7 @@ function supervisorResetManagerPin(mgrId) {
   mgr.pinHash = hashPin("1234");
   mgr.mustChangePin = true;
   addAuditLog("المشرف التقني", "SUPERVISOR", "SUPERVISOR_RESET_MGR", mgr.username, "كود خاص مشفر", `إعادة ضبط كود المسؤول (${mgr.name}) إلى 1234`, "طلب إعادة ضبط كود مسؤول");
-  saveLocalState();
+  saveLocalState(true);
   renderSupervisorManagers();
   alert(`تمت إعادة ضبط الكود السري للمسؤول (${mgr.name}) إلى 1234.`);
 }
@@ -1911,7 +2211,7 @@ function supervisorDeleteManager(mgrId) {
 
   appState.managers = appState.managers.filter(m => m.id !== mgrId);
   addAuditLog("المشرف التقني", "SUPERVISOR", "SUPERVISOR_DEL_MGR", mgr.username, `حساب نشط: ${mgr.name}`, "تم حذف حساب الدخول للمسؤول", "إدارة حسابات المسؤولين");
-  saveLocalState();
+  saveLocalState(true);
   renderSupervisorManagers();
 }
 
@@ -1923,7 +2223,7 @@ function supervisorChangeOwnPin() {
     return;
   }
   appState.supervisorPinHash = hashPin(newPin);
-  saveLocalState();
+  saveLocalState(true);
   document.getElementById("supNewPin").value = "";
   alert("تم تغيير الكود السري للمشرف بنجاح.");
 }
@@ -1948,13 +2248,22 @@ function renderSupervisorManagers() {
   `).join("");
 }
 
+// مراقبة تغير حالة الشبكة في الهاتف لحظياً
+window.addEventListener("online", () => {
+  updateConnectionBadgeUI();
+  syncWithCloud(true, false);
+});
+window.addEventListener("offline", () => {
+  cloudSyncOk = false;
+  updateConnectionBadgeUI();
+});
+
 // تشغيل النظام عند فتح الصفحة
 window.addEventListener("DOMContentLoaded", () => {
   loadLocalState();
   renderPublicPortal();
-  syncWithCloud(false);
-  // مزامنة دورية كل 45 ثانية عند توفر الإنترنت
-  setInterval(() => syncWithCloud(false), 45000);
+  syncWithCloud(false, false);
+  setInterval(() => syncWithCloud(false, false), 40000);
 });
 </script>
 </body>
